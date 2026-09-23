@@ -16,389 +16,402 @@
 
 <body>
 
-    <!-- =====================================================
-         HEADER
-    ====================================================== -->
+<header class="site-header">
 
-    <header class="topbar">
+    <div class="shell header-inner">
 
-        <div class="topbar-inner">
+        <a href="index.html" class="brand">
+            <span class="brand-mark">☠️</span>
+            <span>EXCUSE-AS-A-SERVICE</span>
+        </a>
 
-            <a href="index.html" class="logo">
-                <span class="logo-icon">☠️</span>
-                <span>EXCUSE-AS-A-SERVICE</span>
+        <nav class="nav">
+
+            <a
+                href="index.html"
+                class="nav-link active"
+            >
+                ASK
             </a>
 
-            <nav class="main-nav">
+            <a
+                href="conversations.html"
+                class="nav-link"
+            >
+                CONVERSATIONS
+            </a>
 
-                <a href="index.html" class="nav-link active">
-                    ASK
-                </a>
+        </nav>
 
-                <a href="conversations.html" class="nav-link">
-                    CONVERSATIONS
-                </a>
+    </div>
 
-            </nav>
+</header>
+
+
+<main class="shell">
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <div class="hero-mark">
+            ☠️
+        </div>
+
+        <div class="eyebrow">
+            EXCUSE GENERATOR
+        </div>
+
+        <h1>
+            ASK ANYTHING.
+            <br>
+            GET AN EXCUSE.
+        </h1>
+
+        <p>
+            Believable. Idiotic. Sarcastic. Dark.
+            Completely unnecessary.
+        </p>
+
+    </section>
+
+
+    <!-- GENERATOR -->
+
+    <section class="generator-panel">
+
+        <div class="panel-top">
+
+            <div>
+
+                <div class="eyebrow">
+                    01 · SITUATION
+                </div>
+
+                <h2>
+                    Tell us what happened.
+                </h2>
+
+            </div>
+
+            <span class="status-pill">
+                <i></i>
+                READY
+            </span>
 
         </div>
 
-    </header>
+
+        <label
+            class="field-label"
+            for="situation"
+        >
+            WHAT HAPPENED?
+        </label>
 
 
-    <!-- =====================================================
-         MAIN
-    ====================================================== -->
-
-    <main class="container">
-
-
-        <!-- =================================================
-             HERO
-        ================================================== -->
-
-        <section class="hero">
-
-            <div class="hero-icon">
-                ☠️
-            </div>
-
-            <div class="hero-content">
-
-                <p class="eyebrow">
-                    EXCUSE GENERATOR
-                </p>
-
-                <h1>
-                    ASK ANYTHING.
-                    <br>
-                    GET AN EXCUSE.
-                </h1>
-
-                <p class="hero-description">
-                    Believable. Idiotic. Sarcastic. Dark.
-                    Completely unnecessary.
-                </p>
-
-            </div>
-
-        </section>
+        <textarea
+            id="situation"
+            rows="5"
+            placeholder="Example: I missed the meeting because I overslept..."
+        ></textarea>
 
 
-        <!-- =================================================
-             GENERATOR
-        ================================================== -->
+        <!-- STYLE -->
 
-        <section class="generator-card">
+        <div class="eyebrow style-title">
+            02 · EXCUSE STYLE
+        </div>
 
-            <div class="card-header">
+
+        <div
+            class="style-grid"
+            id="styleGrid"
+            role="group"
+            aria-label="Excuse style"
+        >
+
+            <button
+                class="style-option selected"
+                type="button"
+                data-style="believable"
+            >
+                <b>01</b>
+                <span>Believable</span>
+                <small>Almost reasonable</small>
+            </button>
+
+
+            <button
+                class="style-option"
+                type="button"
+                data-style="professional"
+            >
+                <b>02</b>
+                <span>Professional</span>
+                <small>Corporate damage control</small>
+            </button>
+
+
+            <button
+                class="style-option"
+                type="button"
+                data-style="casual"
+            >
+                <b>03</b>
+                <span>Casual</span>
+                <small>Just vibes</small>
+            </button>
+
+
+            <button
+                class="style-option"
+                type="button"
+                data-style="sarcastic"
+            >
+                <b>04</b>
+                <span>Sarcastic</span>
+                <small>Obviously</small>
+            </button>
+
+
+            <button
+                class="style-option"
+                type="button"
+                data-style="idiotic"
+            >
+                <b>05</b>
+                <span>Idiotic</span>
+                <small>Logic not included</small>
+            </button>
+
+
+            <button
+                class="style-option"
+                type="button"
+                data-style="dark humor"
+            >
+                <b>06</b>
+                <span>Dark Humor</span>
+                <small>Probably fine</small>
+            </button>
+
+
+            <button
+                class="style-option"
+                type="button"
+                data-style="absurd"
+            >
+                <b>07</b>
+                <span>Absurd</span>
+                <small>Reality optional</small>
+            </button>
+
+
+            <button
+                class="style-option"
+                type="button"
+                data-style="corporate"
+            >
+                <b>08</b>
+                <span>Corporate</span>
+                <small>Synergy detected</small>
+            </button>
+
+
+            <button
+                class="style-option"
+                type="button"
+                data-style="dramatic"
+            >
+                <b>09</b>
+                <span>Dramatic</span>
+                <small>Everything changed</small>
+            </button>
+
+
+            <button
+                class="style-option"
+                type="button"
+                data-style="passive-aggressive"
+            >
+                <b>10</b>
+                <span>Passive Aggressive</span>
+                <small>As you know...</small>
+            </button>
+
+        </div>
+
+
+        <!-- HIDDEN STYLE VALUE -->
+
+        <input
+            type="hidden"
+            id="style"
+            value="believable"
+        >
+
+
+        <!-- BOTTOM CONTROLS -->
+
+        <div class="generator-bottom">
+
+            <div class="count-control">
 
                 <div>
 
-                    <p class="card-eyebrow">
-                        GENERATOR
-                    </p>
+                    <div class="field-label">
+                        03 · CONVERSATIONS
+                    </div>
 
-                    <h2>
-                        What happened?
-                    </h2>
+                    <strong id="countDisplay">
+                        5
+                    </strong>
 
-                </div>
-
-                <div class="card-icon">
-                    💀
-                </div>
-
-            </div>
-
-
-            <!-- =============================================
-                 SITUATION
-            ============================================== -->
-
-            <div class="field-group">
-
-                <label
-                    for="situation"
-                    class="field-label"
-                >
-                    WHAT HAPPENED?
-                </label>
-
-                <textarea
-                    id="situation"
-                    name="situation"
-                    rows="5"
-                    placeholder="Example: I missed the meeting..."
-                    autocomplete="off"
-                    spellcheck="true"
-                ></textarea>
-
-            </div>
-
-
-            <!-- =============================================
-                 SETTINGS
-            ============================================== -->
-
-            <div class="settings-grid">
-
-
-                <!-- STYLE -->
-
-                <div class="field-group">
-
-                    <label
-                        for="style"
-                        class="field-label"
-                    >
-                        STYLE
-                    </label>
-
-                    <select
-                        id="style"
-                        name="style"
-                    >
-
-                        <option value="believable">
-                            Believable
-                        </option>
-
-                        <option value="professional">
-                            Professional
-                        </option>
-
-                        <option value="casual">
-                            Casual
-                        </option>
-
-                        <option value="sarcastic">
-                            Sarcastic
-                        </option>
-
-                        <option value="idiotic">
-                            Idiotic
-                        </option>
-
-                        <option value="dark humor">
-                            Dark Humor
-                        </option>
-
-                        <option value="absurd">
-                            Absurd
-                        </option>
-
-                        <option value="corporate">
-                            Corporate
-                        </option>
-
-                        <option value="dramatic">
-                            Dramatic
-                        </option>
-
-                        <option value="passive-aggressive">
-                            Passive Aggressive
-                        </option>
-
-                    </select>
+                    <span>
+                        generated chats
+                    </span>
 
                 </div>
 
 
-                <!-- CONVERSATION COUNT -->
+                <div class="stepper">
 
-                <div class="field-group">
-
-                    <label
-                        for="conversationCount"
-                        class="field-label"
+                    <button
+                        id="countMinus"
+                        type="button"
+                        aria-label="Decrease conversations"
                     >
-                        CONVERSATIONS
-                    </label>
+                        −
+                    </button>
 
-                    <select
-                        id="conversationCount"
-                        name="conversationCount"
+                    <span id="countValue">
+                        5
+                    </span>
+
+                    <button
+                        id="countPlus"
+                        type="button"
+                        aria-label="Increase conversations"
                     >
-
-                        <option value="1">
-                            1 Conversation
-                        </option>
-
-                        <option value="3">
-                            3 Conversations
-                        </option>
-
-                        <option value="5" selected>
-                            5 Conversations
-                        </option>
-
-                        <option value="10">
-                            10 Conversations
-                        </option>
-
-                        <option value="20">
-                            20 Conversations
-                        </option>
-
-                        <option value="50">
-                            50 Conversations
-                        </option>
-
-                    </select>
+                        +
+                    </button>
 
                 </div>
 
             </div>
 
-
-            <!-- =============================================
-                 GENERATE BUTTON
-            ============================================== -->
 
             <button
                 id="generateButton"
-                class="primary-button"
+                class="generate-button"
                 type="button"
             >
+
                 <span>☠️</span>
-                <span>GENERATE</span>
+
+                GENERATE EXCUSES
+
+                <span>→</span>
+
             </button>
 
-        </section>
+        </div>
 
 
-        <!-- =================================================
-             RESULTS
-        ================================================== -->
-
-        <section
-            class="results-section"
-            id="resultsSection"
+        <select
+            id="conversationCount"
+            class="hidden-control"
+            aria-hidden="true"
         >
 
-            <div class="section-header">
+            <option value="1">1</option>
+            <option value="3">3</option>
+            <option value="5" selected>5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
 
-                <div>
+        </select>
 
-                    <p class="section-eyebrow">
-                        OUTPUT
-                    </p>
+    </section>
 
-                    <h2 id="resultHeading">
-                        GENERATED EXCUSES
-                    </h2>
 
+    <!-- RESULTS -->
+
+    <section class="results-section">
+
+        <div class="results-head">
+
+            <div>
+
+                <div class="eyebrow">
+                    04 · OUTPUT
                 </div>
 
-                <div
-                    class="result-count"
-                    id="resultCount"
-                >
-                    0
-                </div>
+                <h2 id="resultHeading">
+                    READY TO GENERATE
+                </h2>
 
             </div>
 
 
-            <!-- Generated conversations are inserted here -->
-
-            <div
-                id="results"
-                class="results-container"
-                aria-live="polite"
-            ></div>
-
-
-            <!-- Empty state -->
-
-            <div
-                id="emptyState"
-                class="empty-state"
+            <span
+                class="result-count"
+                id="resultCount"
             >
-
-                <div class="empty-icon">
-                    💬
-                </div>
-
-                <h3>
-                    Nothing generated yet.
-                </h3>
-
-                <p>
-                    Tell us what happened and we'll
-                    manufacture a completely unnecessary excuse.
-                </p>
-
-            </div>
-
-        </section>
-
-    </main>
-
-
-    <!-- =====================================================
-         FOOTER
-    ====================================================== -->
-
-    <footer class="site-footer">
-
-        <div class="footer-inner">
-
-            <span>
-                EXCUSE-AS-A-SERVICE
-            </span>
-
-            <span>
-                ·
-            </span>
-
-            <span>
-                NO ACCOUNTS
-            </span>
-
-            <span>
-                ·
-            </span>
-
-            <span>
-                NO TRACKING
-            </span>
-
-            <span>
-                ·
-            </span>
-
-            <span>
-                NO DATABASE
+                0
             </span>
 
         </div>
 
-    </footer>
+
+        <div
+            id="emptyState"
+            class="empty-state"
+        >
+
+            <div>
+                💬
+            </div>
+
+            <h3>
+                Nothing generated yet.
+            </h3>
+
+            <p>
+                Give the situation a sentence.
+                We will make the situation worse.
+            </p>
+
+        </div>
 
 
-    <!-- =====================================================
-         DATA
-    ====================================================== -->
+        <div
+            id="results"
+            class="results-container"
+            aria-live="polite"
+        ></div>
 
-    <script src="data/content.js"></script>
+    </section>
 
-
-    <!-- =====================================================
-         SCREENSHOT LIBRARY
-    ====================================================== -->
-
-    <script
-        src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"
-    ></script>
+</main>
 
 
-    <!-- =====================================================
-         APPLICATION
-    ====================================================== -->
+<footer class="site-footer">
 
-    <script src="app.js"></script>
+    <div class="shell">
+        EXCUSE-AS-A-SERVICE · NO ACCOUNTS · NO TRACKING · NO DATABASE
+    </div>
+
+</footer>
+
+
+<script src="data/content.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+<script src="app.js"></script>
 
 </body>
 </html>
