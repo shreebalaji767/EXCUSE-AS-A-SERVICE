@@ -1,6 +1,11 @@
 /* =========================================================
    EXCUSE-AS-A-SERVICE
-   MULTIPLE CONVERSATIONS
+   RANDOM MULTIPLE CONVERSATIONS
+========================================================= */
+
+
+/* =========================================================
+   ELEMENTS
 ========================================================= */
 
 const container =
@@ -20,7 +25,7 @@ const resultHeading =
 
 
 /* =========================================================
-   LOAD DATA
+   DATA
 ========================================================= */
 
 const DATA =
@@ -32,49 +37,49 @@ const conversations =
         : [];
 
 
-if (!conversations.length) {
+if (conversations.length === 0) {
 
     container.innerHTML = `
-        <div class="conversation-card">
+        <article class="conversation-card">
 
             <div class="result-label">
                 ERROR
             </div>
 
             <h3>
-                No conversations were found.
+                No conversation data found.
             </h3>
 
             <p style="color:#777;">
-                Check data/content.js and make sure
-                it contains EXCUSE_DATA.conversations.
+                Check data/content.js.
             </p>
 
-        </div>
+        </article>
     `;
 
     throw new Error(
-        "No conversations found in EXCUSE_DATA."
+        "EXCUSE_DATA.conversations is empty."
     );
 }
 
 
 /* =========================================================
-   USED CONVERSATIONS
+   USED INDEXES
 ========================================================= */
 
-const usedIndexes = new Set();
+const usedIndexes =
+    new Set();
 
 
 /* =========================================================
-   GET UNIQUE RANDOM CONVERSATION
+   RANDOM CONVERSATION
 ========================================================= */
 
 function getRandomConversation() {
 
     /*
-        If there are still unused conversations,
-        choose only from unused ones.
+        Start a new pool after everything
+        has been used.
     */
 
     if (
@@ -103,6 +108,7 @@ function getRandomConversation() {
 
     usedIndexes.add(index);
 
+
     return conversations[index];
 }
 
@@ -125,38 +131,57 @@ function escapeHTML(value) {
 
 
 /* =========================================================
-   NORMALIZE DATA
+   CONVERT DIFFERENT DATA FORMATS
+   INTO ONE STANDARD FORMAT
 ========================================================= */
 
 function normalizeConversation(item) {
 
     /*
-        Format 1:
+        RESULT:
 
         {
             title: "...",
             style: "...",
-            messages: [...]
-        }
-
-        Format 2:
-
-        {
-            situation: "...",
-            style: "...",
-            dialogue: [...]
-        }
-
-        Format 3:
-
-        {
-            conversation: [...]
+            messages: [
+                {
+                    speaker: "...",
+                    text: "..."
+                }
+            ]
         }
     */
 
 
+    /* -----------------------------------------------------
+       TITLE
+    ----------------------------------------------------- */
+
+    const title =
+        item.title ||
+        item.name ||
+        item.situation ||
+        item.topic ||
+        "Random Conversation";
+
+
+    /* -----------------------------------------------------
+       STYLE
+    ----------------------------------------------------- */
+
+    const style =
+        item.style ||
+        item.type ||
+        "random";
+
+
     let messages = [];
 
+
+    /* =====================================================
+       FORMAT 1
+       messages: [...]
+    ===================================================== */
 
     if (
         Array.isArray(
@@ -165,178 +190,320 @@ function normalizeConversation(item) {
     ) {
 
         messages =
-            item.messages;
+            item.messages.map(
+                message => {
 
-    } else if (
+                    if (
+                        typeof message ===
+                        "string"
+                    ) {
+
+                        return {
+                            speaker: "Someone",
+                            text: message
+                        };
+                    }
+
+
+                    return {
+
+                        speaker:
+                            message.speaker ||
+                            message.character ||
+                            message.role ||
+                            "Someone",
+
+                        text:
+                            message.text ||
+                            message.message ||
+                            message.content ||
+                            ""
+                    };
+                }
+            );
+    }
+
+
+    /* =====================================================
+       FORMAT 2
+       lines: [...]
+       
+       THIS IS LIKELY YOUR FORMAT.
+    ===================================================== */
+
+    else if (
+        Array.isArray(
+            item.lines
+        )
+    ) {
+
+        messages =
+            item.lines.map(
+                line => {
+
+                    /*
+                        If line is already:
+
+                        {
+                            speaker: "...",
+                            text: "..."
+                        }
+                    */
+
+                    if (
+                        typeof line ===
+                        "object"
+                    ) {
+
+                        return {
+
+                            speaker:
+                                line.speaker ||
+                                line.character ||
+                                line.role ||
+                                "Someone",
+
+                            text:
+                                line.text ||
+                                line.message ||
+                                line.content ||
+                                ""
+                        };
+                    }
+
+
+                    /*
+                        If line is:
+
+                        "Boss: Where are you?"
+                    */
+
+                    const parsed =
+                        parseDialogueLine(
+                            line
+                        );
+
+
+                    return parsed;
+                }
+            );
+    }
+
+
+    /* =====================================================
+       FORMAT 3
+       dialogue: [...]
+    ===================================================== */
+
+    else if (
         Array.isArray(
             item.dialogue
         )
     ) {
 
         messages =
-            item.dialogue;
+            item.dialogue.map(
+                line => {
 
-    } else if (
+                    if (
+                        typeof line ===
+                        "object"
+                    ) {
+
+                        return {
+
+                            speaker:
+                                line.speaker ||
+                                line.character ||
+                                "Someone",
+
+                            text:
+                                line.text ||
+                                line.message ||
+                                ""
+                        };
+                    }
+
+
+                    return parseDialogueLine(
+                        line
+                    );
+                }
+            );
+    }
+
+
+    /* =====================================================
+       FORMAT 4
+       conversation: [...]
+    ===================================================== */
+
+    else if (
         Array.isArray(
             item.conversation
         )
     ) {
 
         messages =
-            item.conversation;
+            item.conversation.map(
+                line => {
+
+                    if (
+                        typeof line ===
+                        "object"
+                    ) {
+
+                        return {
+
+                            speaker:
+                                line.speaker ||
+                                line.character ||
+                                "Someone",
+
+                            text:
+                                line.text ||
+                                line.message ||
+                                ""
+                        };
+                    }
+
+
+                    return parseDialogueLine(
+                        line
+                    );
+                }
+            );
     }
 
 
-    /*
-        Normalize every message.
-    */
+    /* =====================================================
+       FORMAT 5
+       dialogue stored as text
+    ===================================================== */
+
+    else if (
+        typeof item.dialogue ===
+        "string"
+    ) {
+
+        messages =
+            item.dialogue
+                .split("\n")
+                .filter(
+                    line =>
+                        line.trim()
+                )
+                .map(
+                    line =>
+                        parseDialogueLine(
+                            line
+                        )
+                );
+    }
+
+
+    /* =====================================================
+       FORMAT 6
+       text stored as multiple lines
+    ===================================================== */
+
+    else if (
+        typeof item.text ===
+        "string"
+    ) {
+
+        messages =
+            item.text
+                .split("\n")
+                .filter(
+                    line =>
+                        line.trim()
+                )
+                .map(
+                    line =>
+                        parseDialogueLine(
+                            line
+                        )
+                );
+    }
+
+
+    /* =====================================================
+       CLEAN EMPTY MESSAGES
+    ===================================================== */
 
     messages =
-        messages.map(
-            message => {
-
-                if (
-                    typeof message ===
-                    "string"
-                ) {
-
-                    return {
-                        speaker: "Someone",
-                        text: message
-                    };
-                }
-
-
-                return {
-
-                    speaker:
-                        message.speaker ||
-                        message.character ||
-                        message.role ||
-                        "Someone",
-
-                    text:
-                        message.text ||
-                        message.message ||
-                        message.content ||
-                        ""
-                };
-            }
+        messages.filter(
+            message =>
+                message.text &&
+                message.text.trim()
         );
 
 
     return {
 
-        title:
-            item.title ||
-            item.situation ||
-            "Random Conversation",
+        title,
 
-        style:
-            item.style ||
-            "random",
+        style,
 
         messages
+
     };
 }
 
 
 /* =========================================================
-   PLAIN TEXT
+   PARSE:
+
+   "Boss: Where were you?"
 ========================================================= */
 
-function conversationToText(data) {
-
-    let text =
-        "☠️ EXCUSE-AS-A-SERVICE\n\n";
-
-
-    if (data.title) {
-
-        text +=
-            data.title +
-            "\n\n";
-    }
-
-
-    data.messages.forEach(
-        message => {
-
-            text +=
-                `${message.speaker}: `;
-
-            text +=
-                `${message.text}\n\n`;
-        }
-    );
-
-
-    return text.trim();
-}
-
-
-/* =========================================================
-   COPY
-========================================================= */
-
-async function copyConversation(
-    data,
-    button
-) {
+function parseDialogueLine(line) {
 
     const text =
-        conversationToText(data);
+        String(
+            line ?? ""
+        ).trim();
 
 
-    try {
+    /*
+        Find:
 
-        await navigator.clipboard.writeText(
-            text
+        Speaker: text
+    */
+
+    const match =
+        text.match(
+            /^([^:]{1,40}):\s*(.+)$/
         );
 
-    } catch {
 
-        const textarea =
-            document.createElement(
-                "textarea"
-            );
+    if (match) {
 
-        textarea.value =
-            text;
+        return {
 
-        textarea.style.position =
-            "fixed";
+            speaker:
+                match[1].trim(),
 
-        textarea.style.left =
-            "-9999px";
+            text:
+                match[2].trim()
 
-        document.body.appendChild(
-            textarea
-        );
-
-        textarea.select();
-
-        document.execCommand(
-            "copy"
-        );
-
-        textarea.remove();
+        };
     }
 
 
-    button.textContent =
-        "✓ COPIED";
+    /*
+        If no speaker exists,
+        alternate speakers.
+    */
 
+    return {
 
-    setTimeout(
-        () => {
+        speaker: "Someone",
 
-            button.textContent =
-                "📋 COPY";
+        text
 
-        },
-        1500
-    );
+    };
 }
 
 
@@ -368,6 +535,10 @@ function renderConversation(
     let messagesHTML = "";
 
 
+    /* -----------------------------------------------------
+       ACTUAL DIALOGUE
+    ----------------------------------------------------- */
+
     data.messages.forEach(
         message => {
 
@@ -395,8 +566,8 @@ function renderConversation(
 
 
     /*
-        If no messages exist,
-        still show the conversation.
+        Fallback only if absolutely no
+        dialogue exists.
     */
 
     if (!messagesHTML) {
@@ -406,13 +577,12 @@ function renderConversation(
             <div class="message">
 
                 <div class="speaker">
-                    RANDOM
+                    SYSTEM
                 </div>
 
                 <div class="bubble">
-                    ${escapeHTML(
-                        data.title
-                    )}
+                    No dialogue text was found
+                    in this conversation.
                 </div>
 
             </div>
@@ -420,6 +590,10 @@ function renderConversation(
         `;
     }
 
+
+    /* -----------------------------------------------------
+       CARD
+    ----------------------------------------------------- */
 
     card.innerHTML = `
 
@@ -471,9 +645,9 @@ function renderConversation(
     `;
 
 
-    /*
-        COPY
-    */
+    /* =====================================================
+       COPY
+    ===================================================== */
 
     const copyButton =
         card.querySelector(
@@ -494,9 +668,9 @@ function renderConversation(
     );
 
 
-    /*
-        SCREENSHOT
-    */
+    /* =====================================================
+       SCREENSHOT
+    ===================================================== */
 
     const screenshotButton =
         card.querySelector(
@@ -522,15 +696,118 @@ function renderConversation(
 
 
 /* =========================================================
-   GENERATE
+   CONVERT TO TEXT
+========================================================= */
+
+function conversationToText(
+    data
+) {
+
+    let output =
+        "☠️ EXCUSE-AS-A-SERVICE\n\n";
+
+
+    output +=
+        data.title +
+        "\n\n";
+
+
+    data.messages.forEach(
+        message => {
+
+            output +=
+                `${message.speaker}: `;
+
+            output +=
+                `${message.text}\n\n`;
+
+        }
+    );
+
+
+    return output.trim();
+}
+
+
+/* =========================================================
+   COPY
+========================================================= */
+
+async function copyConversation(
+    data,
+    button
+) {
+
+    const text =
+        conversationToText(
+            data
+        );
+
+
+    try {
+
+        await navigator.clipboard.writeText(
+            text
+        );
+
+    } catch {
+
+        const textarea =
+            document.createElement(
+                "textarea"
+            );
+
+
+        textarea.value =
+            text;
+
+
+        textarea.style.position =
+            "fixed";
+
+
+        textarea.style.left =
+            "-9999px";
+
+
+        document.body.appendChild(
+            textarea
+        );
+
+
+        textarea.select();
+
+
+        document.execCommand(
+            "copy"
+        );
+
+
+        textarea.remove();
+    }
+
+
+    button.textContent =
+        "✓ COPIED";
+
+
+    setTimeout(
+        () => {
+
+            button.textContent =
+                "📋 COPY";
+
+        },
+        1500
+    );
+}
+
+
+/* =========================================================
+   GENERATE MULTIPLE
 ========================================================= */
 
 function generateConversations() {
-
-    /*
-        IMPORTANT:
-        Read the SELECTED VALUE every time.
-    */
 
     const amount =
         parseInt(
@@ -540,7 +817,7 @@ function generateConversations() {
 
 
     if (
-        !amount ||
+        !Number.isFinite(amount) ||
         amount < 1
     ) {
 
@@ -548,18 +825,9 @@ function generateConversations() {
     }
 
 
-    /*
-        Clear old conversations.
-    */
+    container.innerHTML =
+        "";
 
-    container.innerHTML = "";
-
-
-    /*
-        Make EXACTLY the selected amount,
-        provided the dataset contains enough
-        unique conversations.
-    */
 
     for (
         let i = 0;
@@ -567,13 +835,13 @@ function generateConversations() {
         i++
     ) {
 
-        const conversation =
+        const item =
             getRandomConversation();
 
 
         const card =
             renderConversation(
-                conversation,
+                item,
                 i + 1
             );
 
@@ -583,10 +851,6 @@ function generateConversations() {
         );
     }
 
-
-    /*
-        Update heading.
-    */
 
     resultHeading.textContent =
         `${amount} RANDOM CONVERSATION${
@@ -601,19 +865,6 @@ function generateConversations() {
    SELECT CHANGE
 ========================================================= */
 
-/*
-    THIS is the important part.
-
-    When the user changes:
-
-    1 → immediately generate 1
-    3 → immediately generate 3
-    5 → immediately generate 5
-    10 → immediately generate 10
-    20 → immediately generate 20
-    50 → immediately generate 50
-*/
-
 countSelect.addEventListener(
     "change",
     generateConversations
@@ -621,7 +872,7 @@ countSelect.addEventListener(
 
 
 /* =========================================================
-   BUTTON
+   GENERATE BUTTON
 ========================================================= */
 
 generateButton.addEventListener(
@@ -641,7 +892,7 @@ generateMoreButton.addEventListener(
 
 
 /* =========================================================
-   INITIAL LOAD
+   INITIAL
 ========================================================= */
 
 generateConversations();
