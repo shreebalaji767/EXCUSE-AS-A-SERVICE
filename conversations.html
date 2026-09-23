@@ -10,12 +10,9 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <meta
-        name="description"
-        content="Random absurd conversations from EXCUSE-AS-A-SERVICE."
-    >
-
-    <title>Random Conversations — EXCUSE-AS-A-SERVICE</title>
+    <title>
+        Random Conversations | EXCUSE-AS-A-SERVICE
+    </title>
 
     <link
         rel="stylesheet"
@@ -24,11 +21,9 @@
 
 </head>
 
+
 <body>
 
-<!-- =====================================================
-     TOPBAR
-===================================================== -->
 
 <header class="topbar">
 
@@ -39,13 +34,17 @@
         ☠️ EXCUSE-AS-A-SERVICE
     </a>
 
+
     <nav>
 
         <a href="index.html">
             Ask
         </a>
 
-        <a href="conversations.html">
+        <a
+            href="conversations.html"
+            class="active"
+        >
             Conversations
         </a>
 
@@ -54,15 +53,9 @@
 </header>
 
 
-<!-- =====================================================
-     MAIN
-===================================================== -->
 
 <main class="container">
 
-    <!-- =================================================
-         HERO
-    ================================================== -->
 
     <section class="hero">
 
@@ -74,67 +67,64 @@
             RANDOM CONVERSATIONS
         </h1>
 
-        <h2>
-            ABSOLUTELY UNNECESSARY
-        </h2>
-
         <p>
-            Choose how many conversations you want.
-            Every generation picks different conversations.
+            Generate completely unnecessary
+            conversations between completely
+            unnecessary people.
         </p>
 
     </section>
 
 
-    <!-- =================================================
-         CONTROLS
-    ================================================== -->
 
-    <section class="generator-card">
+    <section class="generator-controls">
 
-        <label for="conversationCount">
-            NUMBER OF CONVERSATIONS
-        </label>
+        <div class="control-group">
 
-        <select
-            id="conversationCount"
-        >
+            <label for="conversationCount">
+                NUMBER OF CONVERSATIONS
+            </label>
 
-            <option value="1">
-                1 Conversation
-            </option>
-
-            <option value="3">
-                3 Conversations
-            </option>
-
-            <option
-                value="5"
-                selected
+            <select
+                id="conversationCount"
             >
-                5 Conversations
-            </option>
 
-            <option value="10">
-                10 Conversations
-            </option>
+                <option value="1">
+                    1 Conversation
+                </option>
 
-            <option value="20">
-                20 Conversations
-            </option>
+                <option value="3">
+                    3 Conversations
+                </option>
 
-            <option value="50">
-                50 Conversations
-            </option>
+                <option
+                    value="5"
+                    selected
+                >
+                    5 Conversations
+                </option>
 
-        </select>
+                <option value="10">
+                    10 Conversations
+                </option>
+
+                <option value="20">
+                    20 Conversations
+                </option>
+
+                <option value="50">
+                    50 Conversations
+                </option>
+
+            </select>
+
+        </div>
 
 
         <button
             id="generateConversations"
             class="primary-button"
             type="button"
-            style="margin-top: 15px;"
         >
             ☠️ GENERATE CONVERSATIONS
         </button>
@@ -142,9 +132,6 @@
     </section>
 
 
-    <!-- =================================================
-         RESULTS
-    ================================================== -->
 
     <section class="results">
 
@@ -171,12 +158,10 @@
 
     </section>
 
+
 </main>
 
 
-<!-- =====================================================
-     FOOTER
-===================================================== -->
 
 <footer>
 
@@ -185,13 +170,11 @@
 </footer>
 
 
-<!-- =====================================================
-     DATA
-===================================================== -->
 
 <script src="data/content.js"></script>
 
 <script src="conversations.js"></script>
+
 
 </body>
 
