@@ -1,6 +1,6 @@
 /* =========================================================
    EXCUSE-AS-A-SERVICE
-   RESPONSIVE GLOBAL CSS
+   COMPLETE RESPONSIVE GLOBAL CSS
    Mobile + Tablet + Laptop + Desktop + 4K
 ========================================================= */
 
@@ -12,18 +12,27 @@
 
 :root {
     --bg: #090909;
+    --bg-soft: #0e0e0e;
+
     --card: #111111;
-    --card2: #171717;
+    --card-2: #161616;
+    --card-3: #1c1c1c;
+
     --border: #292929;
+    --border-light: #383838;
 
     --text: #f5f5f5;
     --muted: #8c8c8c;
+    --muted-2: #666666;
 
     --accent: #ffffff;
 
+    --speaker-a: #171717;
+    --speaker-b: #252525;
+
     --radius-small: 10px;
     --radius-medium: 16px;
-    --radius-large: 24px;
+    --radius-large: 22px;
     --radius-xl: 28px;
 
     --content-width: 1100px;
@@ -35,29 +44,34 @@
     );
 }
 
+
 /* =========================================================
    BASE
 ========================================================= */
 
 html {
-    scroll-behavior: smooth;
     width: 100%;
+    min-height: 100%;
+
+    scroll-behavior: smooth;
+
     overflow-x: hidden;
 }
 
 body {
-    margin: 0;
-
     width: 100%;
     min-height: 100vh;
+
+    margin: 0;
 
     overflow-x: hidden;
 
     background:
         radial-gradient(
-            circle at top,
-            #202020 0,
-            #090909 45%
+            circle at 50% -10%,
+            #252525 0,
+            #111111 22%,
+            #090909 52%
         );
 
     color: var(--text);
@@ -70,26 +84,24 @@ body {
     line-height: 1.5;
 
     -webkit-text-size-adjust: 100%;
+
     text-rendering: optimizeLegibility;
 }
-
-/* Prevent media from overflowing */
 
 img,
 video,
 canvas,
 svg {
+    display: block;
     max-width: 100%;
 }
-
-/* Forms */
 
 button,
 textarea,
 select,
 input {
-    font: inherit;
     max-width: 100%;
+    font: inherit;
 }
 
 button,
@@ -101,6 +113,7 @@ button {
     -webkit-tap-highlight-color: transparent;
 }
 
+
 /* =========================================================
    TOPBAR
 ========================================================= */
@@ -110,15 +123,15 @@ button {
 
     top: 0;
 
-    z-index: 100;
+    z-index: 1000;
 
     width: 100%;
 
     display: flex;
 
-    justify-content: space-between;
-
     align-items: center;
+
+    justify-content: space-between;
 
     gap: 20px;
 
@@ -131,38 +144,44 @@ button {
             9,
             9,
             9,
-            .92
+            0.94
         );
 
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
 
     border-bottom:
         1px solid var(--border);
 }
+
 
 /* =========================================================
    LOGO
 ========================================================= */
 
 .logo {
-    color: white;
+    display: inline-block;
+
+    color: #fff;
 
     text-decoration: none;
 
+    font-size: 15px;
+
     font-weight: 900;
 
-    letter-spacing: -1px;
+    letter-spacing: -0.5px;
 
     white-space: nowrap;
 
     transition:
-        opacity .15s ease;
+        opacity 0.15s ease;
 }
 
 .logo:hover {
-    opacity: .75;
+    opacity: 0.72;
 }
+
 
 /* =========================================================
    NAVIGATION
@@ -190,18 +209,21 @@ nav a {
 
     text-decoration: none;
 
+    font-size: 14px;
+
     font-weight: 700;
 
     white-space: nowrap;
 
     transition:
-        color .15s ease;
+        color 0.15s ease;
 }
 
 nav a:hover,
 nav a:focus {
-    color: white;
+    color: #fff;
 }
+
 
 /* =========================================================
    MAIN CONTAINER
@@ -211,17 +233,30 @@ nav a:focus {
     width:
         min(
             var(--content-width),
-            calc(100% - 2 * var(--page-padding))
+            calc(
+                100% -
+                2 *
+                var(--page-padding)
+            )
         );
 
     margin:
         0 auto;
 
     padding:
-        clamp(45px, 7vw, 80px)
+        clamp(
+            45px,
+            7vw,
+            80px
+        )
         0
-        clamp(60px, 9vw, 110px);
+        clamp(
+            60px,
+            9vw,
+            110px
+        );
 }
+
 
 /* =========================================================
    HERO
@@ -230,17 +265,19 @@ nav a:focus {
 .hero {
     width: 100%;
 
-    text-align: center;
-
     margin-bottom:
         clamp(
             35px,
             6vw,
             60px
         );
+
+    text-align: center;
 }
 
 .skull {
+    margin-bottom: 15px;
+
     font-size:
         clamp(
             45px,
@@ -249,14 +286,14 @@ nav a:focus {
         );
 
     line-height: 1;
-
-    margin-bottom: 15px;
 }
 
 .hero h1 {
+    max-width: 100%;
+
     margin: 0;
 
-    max-width: 100%;
+    color: #fff;
 
     font-size:
         clamp(
@@ -265,14 +302,14 @@ nav a:focus {
             85px
         );
 
-    line-height: .95;
+    line-height: 0.95;
 
     font-weight: 1000;
 
     letter-spacing:
         clamp(
             -5px,
-            -.4vw,
+            -0.4vw,
             -2px
         );
 
@@ -283,6 +320,8 @@ nav a:focus {
     margin:
         8px 0 20px;
 
+    color: #777;
+
     font-size:
         clamp(
             25px,
@@ -292,12 +331,10 @@ nav a:focus {
 
     line-height: 1;
 
-    color: #777;
-
     letter-spacing:
         clamp(
             -3px,
-            -.25vw,
+            -0.25vw,
             -1px
         );
 
@@ -320,12 +357,20 @@ nav a:focus {
         );
 }
 
+
 /* =========================================================
    GENERATOR CARD
 ========================================================= */
 
 .generator-card {
     width: 100%;
+
+    padding:
+        clamp(
+            18px,
+            4vw,
+            30px
+        );
 
     background:
         linear-gradient(
@@ -340,20 +385,13 @@ nav a:focus {
     border-radius:
         var(--radius-xl);
 
-    padding:
-        clamp(
-            18px,
-            4vw,
-            30px
-        );
-
     box-shadow:
         0 25px 80px
         rgba(
             0,
             0,
             0,
-            .35
+            0.35
         );
 }
 
@@ -364,6 +402,7 @@ nav a:focus {
 
     font-weight: 800;
 }
+
 
 /* =========================================================
    TEXTAREA
@@ -381,18 +420,6 @@ textarea {
             180px
         );
 
-    resize: vertical;
-
-    background: #080808;
-
-    color: white;
-
-    border:
-        1px solid #333;
-
-    border-radius:
-        var(--radius-medium);
-
     padding:
         clamp(
             14px,
@@ -400,15 +427,27 @@ textarea {
             20px
         );
 
+    resize: vertical;
+
     outline: none;
+
+    background: #080808;
+
+    color: #fff;
+
+    border:
+        1px solid #333;
+
+    border-radius:
+        var(--radius-medium);
 
     line-height: 1.6;
 
     overflow-wrap: anywhere;
 
     transition:
-        border-color .15s ease,
-        box-shadow .15s ease;
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
 }
 
 textarea::placeholder {
@@ -424,9 +463,10 @@ textarea:focus {
             255,
             255,
             255,
-            .04
+            0.04
         );
 }
+
 
 /* =========================================================
    CONTROLS
@@ -462,16 +502,17 @@ textarea:focus {
 .controls label {
     display: block;
 
+    margin-bottom: 8px;
+
     color: var(--muted);
 
     font-size: 13px;
 
     font-weight: 800;
 
-    margin-bottom: 8px;
-
     text-transform: uppercase;
 }
+
 
 /* =========================================================
    SELECT
@@ -484,9 +525,14 @@ select {
 
     min-height: 50px;
 
+    padding:
+        12px 14px;
+
+    outline: none;
+
     background: #080808;
 
-    color: white;
+    color: #fff;
 
     border:
         1px solid #333;
@@ -494,18 +540,14 @@ select {
     border-radius:
         var(--radius-small);
 
-    padding:
-        12px 14px;
-
-    outline: none;
-
     transition:
-        border-color .15s ease;
+        border-color 0.15s ease;
 }
 
 select:focus {
     border-color: #777;
 }
+
 
 /* =========================================================
    PRIMARY BUTTON
@@ -524,20 +566,19 @@ select:focus {
 
     border: 0;
 
-    border-radius:
-        15px;
+    border-radius: 15px;
 
-    background: white;
+    background: #fff;
 
-    color: black;
+    color: #000;
 
     font-weight: 1000;
 
     text-align: center;
 
     transition:
-        transform .15s ease,
-        opacity .15s ease;
+        transform 0.15s ease,
+        opacity 0.15s ease;
 }
 
 .primary-button:hover,
@@ -545,7 +586,7 @@ select:focus {
     transform:
         translateY(-2px);
 
-    opacity: .9;
+    opacity: 0.9;
 }
 
 .primary-button:active,
@@ -553,6 +594,7 @@ select:focus {
     transform:
         translateY(0);
 }
+
 
 /* =========================================================
    RESULTS
@@ -569,32 +611,38 @@ select:focus {
         );
 }
 
+
 /* =========================================================
    SECTION HEADING
 ========================================================= */
 
 .section-heading {
+    margin:
+        50px 0 20px;
+
+    color: #777;
+
     font-size: 14px;
 
     font-weight: 1000;
 
     letter-spacing: 2px;
 
-    color: #777;
-
-    margin:
-        50px 0 20px;
-
     overflow-wrap: anywhere;
 }
 
+
 /* =========================================================
-   CARDS
+   GENERAL CARDS
 ========================================================= */
 
 .excuse-card,
 .conversation-card {
     width: 100%;
+
+    margin-bottom: 24px;
+
+    overflow: hidden;
 
     background:
         linear-gradient(
@@ -608,42 +656,44 @@ select:focus {
 
     border-radius:
         var(--radius-large);
-
-    padding:
-        clamp(
-            17px,
-            3vw,
-            25px
-        );
-
-    margin-bottom: 20px;
-
-    overflow: hidden;
 }
+
 
 /* =========================================================
    RESULT LABEL
 ========================================================= */
 
 .result-label {
+    margin-bottom: 15px;
+
     color: #777;
 
     font-size: 12px;
 
-    letter-spacing: 2px;
-
     font-weight: 900;
 
-    margin-bottom: 15px;
+    letter-spacing: 2px;
 
     overflow-wrap: anywhere;
 }
+
 
 /* =========================================================
    EXCUSE TEXT
 ========================================================= */
 
+.excuse-card {
+    padding:
+        clamp(
+            17px,
+            3vw,
+            25px
+        );
+}
+
 .excuse-card h3 {
+    margin: 0;
+
     font-size:
         clamp(
             19px,
@@ -653,12 +703,47 @@ select:focus {
 
     line-height: 1.5;
 
-    margin: 0;
-
     overflow-wrap: anywhere;
 
     word-break: break-word;
 }
+
+
+/* =========================================================
+   =========================================================
+   CONVERSATION SYSTEM
+   =========================================================
+========================================================= */
+
+
+/* =========================================================
+   CONVERSATION CARD
+========================================================= */
+
+.conversation-card {
+    position: relative;
+
+    padding: 0;
+
+    background:
+        #0d0d0d;
+
+    border:
+        1px solid #2d2d2d;
+
+    border-radius:
+        22px;
+
+    box-shadow:
+        0 18px 55px
+        rgba(
+            0,
+            0,
+            0,
+            0.38
+        );
+}
+
 
 /* =========================================================
    CONVERSATION HEADER
@@ -667,94 +752,312 @@ select:focus {
 .conversation-header {
     display: flex;
 
+    align-items: flex-start;
+
     justify-content: space-between;
 
-    align-items: center;
+    gap: 20px;
 
-    gap: 15px;
+    width: 100%;
 
-    margin-bottom: 25px;
+    padding:
+        22px 24px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #1a1a1a,
+            #141414
+        );
+
+    border-bottom:
+        1px solid #2c2c2c;
+}
+
+.conversation-header > div:first-child {
+    min-width: 0;
+}
+
+.conversation-number {
+    margin-bottom: 7px;
+
+    color: #666;
+
+    font-size: 11px;
 
     font-weight: 900;
 
-    min-width: 0;
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
 }
 
-.conversation-header > * {
-    min-width: 0;
+.conversation-header h2 {
+    margin: 0;
+
+    color: #fff;
+
+    font-size:
+        clamp(
+            20px,
+            3vw,
+            28px
+        );
+
+    line-height: 1.2;
+
+    overflow-wrap: anywhere;
 }
+
 
 /* =========================================================
-   BADGE
+   STYLE BADGE
 ========================================================= */
 
+.style-badge,
 .badge {
-    display: inline-block;
+    flex-shrink: 0;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
 
     max-width: 100%;
 
     padding:
         7px 11px;
 
-    border:
-        1px solid #333;
-
-    border-radius: 100px;
-
     color: #aaa;
 
-    font-size: 11px;
+    background: #0b0b0b;
 
-    text-transform: uppercase;
+    border:
+        1px solid #3a3a3a;
 
-    overflow-wrap: anywhere;
-}
+    border-radius: 999px;
 
-/* =========================================================
-   MESSAGE
-========================================================= */
-
-.message {
-    width: 100%;
-
-    margin-bottom: 24px;
-
-    min-width: 0;
-}
-
-.speaker {
-    color: #777;
-
-    font-size: 13px;
+    font-size: 10px;
 
     font-weight: 900;
 
-    text-transform: uppercase;
+    letter-spacing: 1px;
 
-    margin-bottom: 7px;
+    text-transform: uppercase;
 
     overflow-wrap: anywhere;
 }
 
-.bubble {
+
+/* =========================================================
+   CHAT AREA
+========================================================= */
+
+.conversation-dialogue {
     width: 100%;
 
-    background: #1c1c1c;
+    padding:
+        30px 26px;
+
+    background:
+        #090909;
+}
+
+
+/* =========================================================
+   MESSAGE ROW
+========================================================= */
+
+.conversation-message {
+    display: flex;
+
+    flex-direction: column;
+
+    width: 100%;
+
+    margin-bottom: 28px;
+}
+
+.conversation-message:last-child {
+    margin-bottom: 0;
+}
+
+
+/* =========================================================
+   SPEAKER LABEL
+========================================================= */
+
+.message-speaker {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    width: fit-content;
+
+    max-width: 85%;
+
+    margin-bottom: 7px;
+
+    color: #fff;
+
+    font-size: 12px;
+
+    font-weight: 1000;
+
+    letter-spacing: 1.5px;
+
+    text-transform: uppercase;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   SPEAKER AVATAR
+========================================================= */
+
+.message-speaker::before {
+    content: "●";
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    width: 25px;
+    height: 25px;
+
+    background: #222;
 
     border:
-        1px solid #292929;
+        1px solid #4a4a4a;
 
-    border-radius: 16px;
+    border-radius: 50%;
+
+    color: #fff;
+
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   MESSAGE BUBBLE
+========================================================= */
+
+.message-text {
+    width: fit-content;
+
+    max-width: min(
+        78%,
+        760px
+    );
 
     padding:
-        14px 18px;
+        14px 17px;
 
-    line-height: 1.6;
+    background:
+        var(--speaker-a);
+
+    color: #f3f3f3;
+
+    border:
+        1px solid #303030;
+
+    border-radius:
+        5px 17px 17px 17px;
+
+    font-size: 15px;
+
+    line-height: 1.65;
 
     overflow-wrap: anywhere;
 
     word-break: break-word;
+
+    box-shadow:
+        0 5px 16px
+        rgba(
+            0,
+            0,
+            0,
+            0.20
+        );
 }
+
+
+/* =========================================================
+   RIGHT-SIDE SPEAKER
+   EVEN MESSAGES
+========================================================= */
+
+.conversation-message:nth-child(even) {
+    align-items: flex-end;
+}
+
+.conversation-message:nth-child(even)
+.message-speaker {
+    align-self: flex-end;
+
+    justify-content: flex-end;
+
+    text-align: right;
+}
+
+.conversation-message:nth-child(even)
+.message-speaker::before {
+    order: 2;
+}
+
+.conversation-message:nth-child(even)
+.message-text {
+    background:
+        var(--speaker-b);
+
+    border-color:
+        #404040;
+
+    border-radius:
+        17px 5px 17px 17px;
+}
+
+
+/* =========================================================
+   VISUAL DIVIDER BETWEEN SPEAKERS
+========================================================= */
+
+.conversation-message:not(:last-child)::after {
+    content: "• • •";
+
+    align-self: center;
+
+    margin-top: 18px;
+
+    color: #444;
+
+    font-size: 10px;
+
+    letter-spacing: 5px;
+}
+
+
+/* =========================================================
+   MESSAGE NUMBER
+========================================================= */
+
+.conversation-message {
+    counter-increment: message;
+}
+
+.conversation-dialogue {
+    counter-reset: message;
+}
+
 
 /* =========================================================
    CONVERSATION ACTIONS
@@ -767,42 +1070,84 @@ select:focus {
 
     gap: 10px;
 
-    margin-top: 20px;
-
     width: 100%;
+
+    padding:
+        17px 24px;
+
+    background:
+        #141414;
+
+    border-top:
+        1px solid #292929;
 }
 
-.conversation-actions button {
+.conversation-actions button,
+.conversation-action {
     min-height: 42px;
 
-    background: #1c1c1c;
+    padding:
+        10px 16px;
 
-    color: white;
+    background:
+        #0c0c0c;
+
+    color: #fff;
 
     border:
-        1px solid #333;
+        1px solid #383838;
 
     border-radius:
         var(--radius-small);
 
-    padding:
-        10px 15px;
-
-    font-size: 12px;
+    font-size: 11px;
 
     font-weight: 900;
 
+    letter-spacing: 1px;
+
     transition:
-        background .15s ease,
-        transform .15s ease;
+        background 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.15s ease;
 }
 
-.conversation-actions button:hover {
-    background: #292929;
+.conversation-actions button:hover,
+.conversation-action:hover {
+    background: #222;
+
+    border-color: #555;
 
     transform:
         translateY(-1px);
 }
+
+.conversation-actions button:active,
+.conversation-action:active {
+    transform:
+        translateY(0);
+}
+
+
+/* =========================================================
+   EMPTY CONVERSATION
+========================================================= */
+
+.empty-conversation {
+    padding:
+        50px 20px;
+
+    text-align: center;
+
+    color: #666;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+}
+
 
 /* =========================================================
    SHARE ALL
@@ -812,6 +1157,7 @@ select:focus {
     margin-top: 20px;
 }
 
+
 /* =========================================================
    FOOTER
 ========================================================= */
@@ -819,23 +1165,24 @@ select:focus {
 footer {
     width: 100%;
 
-    border-top:
-        1px solid var(--border);
-
-    text-align: center;
-
-    color: #555;
-
     padding:
         25px
         var(--page-padding);
+
+    border-top:
+        1px solid var(--border);
+
+    color: #555;
 
     font-size: 12px;
 
     letter-spacing: 1px;
 
+    text-align: center;
+
     overflow-wrap: anywhere;
 }
+
 
 /* =========================================================
    TABLETS
@@ -857,7 +1204,12 @@ footer {
         grid-template-columns:
             1fr 1fr;
     }
+
+    .message-text {
+        max-width: 82%;
+    }
 }
+
 
 /* =========================================================
    MOBILE
@@ -875,17 +1227,16 @@ footer {
         gap: 12px;
 
         padding:
-            14px
-            12px;
+            14px 12px;
     }
 
     nav {
         width: 100%;
 
+        justify-content: center;
+
         gap:
             10px 18px;
-
-        justify-content: center;
     }
 
     nav a {
@@ -899,8 +1250,7 @@ footer {
             );
 
         padding:
-            40px 0
-            70px;
+            40px 0 70px;
     }
 
     .hero {
@@ -932,12 +1282,54 @@ footer {
         min-height: 140px;
     }
 
-    .conversation-header {
-        align-items: flex-start;
 
+    /* ---------------------------------------------
+       MOBILE CONVERSATION
+    --------------------------------------------- */
+
+    .conversation-card {
+        border-radius: 20px;
+    }
+
+    .conversation-header {
         flex-direction: column;
 
-        gap: 10px;
+        align-items: flex-start;
+
+        padding:
+            19px 17px;
+
+        gap: 12px;
+    }
+
+    .style-badge {
+        align-self: flex-start;
+    }
+
+    .conversation-dialogue {
+        padding:
+            24px 14px;
+    }
+
+    .conversation-message {
+        margin-bottom: 25px;
+    }
+
+    .message-speaker {
+        max-width: 90%;
+
+        font-size: 11px;
+    }
+
+    .message-text {
+        max-width: 90%;
+
+        padding:
+            12px 14px;
+
+        font-size: 14px;
+
+        line-height: 1.6;
     }
 
     .conversation-actions {
@@ -945,17 +1337,20 @@ footer {
 
         grid-template-columns:
             1fr 1fr;
+
+        padding:
+            14px 15px;
     }
 
     .conversation-actions button {
         width: 100%;
     }
 
-    .excuse-card,
-    .conversation-card {
+    .excuse-card {
         border-radius: 20px;
     }
 }
+
 
 /* =========================================================
    SMALL PHONES
@@ -1033,16 +1428,51 @@ footer {
 
     .excuse-card,
     .conversation-card {
-        padding: 15px;
-
         border-radius: 17px;
     }
 
-    .bubble {
-        padding:
-            13px 14px;
 
-        border-radius: 14px;
+    /* ---------------------------------------------
+       CHAT ON SMALL PHONES
+    --------------------------------------------- */
+
+    .conversation-header {
+        padding:
+            17px 14px;
+    }
+
+    .conversation-dialogue {
+        padding:
+            20px 10px;
+    }
+
+    .message-speaker {
+        font-size: 10px;
+
+        letter-spacing: 1px;
+    }
+
+    .message-speaker::before {
+        width: 23px;
+        height: 23px;
+    }
+
+    .message-text {
+        max-width: 94%;
+
+        padding:
+            11px 13px;
+
+        font-size: 13px;
+
+        border-radius:
+            13px;
+    }
+
+    .conversation-message:nth-child(even)
+    .message-text {
+        border-radius:
+            13px;
     }
 
     .conversation-actions {
@@ -1054,6 +1484,7 @@ footer {
         min-height: 44px;
     }
 }
+
 
 /* =========================================================
    VERY SMALL PHONES
@@ -1099,13 +1530,34 @@ footer {
 
     .excuse-card,
     .conversation-card {
-        padding: 12px;
+        padding: 0;
     }
 
-    .bubble {
-        font-size: 14px;
+    .conversation-header {
+        padding:
+            15px 12px;
+    }
+
+    .conversation-dialogue {
+        padding:
+            18px 8px;
+    }
+
+    .message-text {
+        max-width: 96%;
+
+        padding:
+            10px 12px;
+
+        font-size: 13px;
+    }
+
+    .conversation-actions {
+        padding:
+            12px;
     }
 }
+
 
 /* =========================================================
    LANDSCAPE PHONES
@@ -1141,6 +1593,7 @@ footer {
     }
 }
 
+
 /* =========================================================
    TOUCH DEVICES
 ========================================================= */
@@ -1149,7 +1602,8 @@ footer {
 
     .primary-button:hover,
     .share-all:hover,
-    .conversation-actions button:hover {
+    .conversation-actions button:hover,
+    .conversation-action:hover {
         transform: none;
     }
 
@@ -1158,6 +1612,7 @@ footer {
         min-height: 44px;
     }
 }
+
 
 /* =========================================================
    LARGE DESKTOP
@@ -1172,7 +1627,13 @@ footer {
     .container {
         padding-top: 90px;
     }
+
+    .conversation-dialogue {
+        padding:
+            35px 40px;
+    }
 }
+
 
 /* =========================================================
    4K / ULTRA-WIDE
@@ -1189,6 +1650,7 @@ footer {
     }
 }
 
+
 /* =========================================================
    REDUCED MOTION
 ========================================================= */
@@ -1202,11 +1664,14 @@ footer {
     *,
     *::before,
     *::after {
-        animation-duration: .01ms !important;
+        animation-duration: 0.01ms !important;
+
         animation-iteration-count: 1 !important;
-        transition-duration: .01ms !important;
+
+        transition-duration: 0.01ms !important;
     }
 }
+
 
 /* =========================================================
    DARK MODE SAFETY
