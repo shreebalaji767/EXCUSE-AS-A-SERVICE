@@ -1,17 +1,121 @@
-"use strict";
-
-const data = window.EXCUSE_DATA;
+/* =========================================================
+   EXCUSE-AS-A-SERVICE
+   MULTIPLE CONVERSATIONS
+========================================================= */
 
 const container =
-    document.getElementById(
-        "conversationContainer"
+    document.getElementById("conversationContainer");
+
+const countSelect =
+    document.getElementById("conversationCount");
+
+const generateButton =
+    document.getElementById("generateConversations");
+
+const generateMoreButton =
+    document.getElementById("generateMore");
+
+const resultHeading =
+    document.getElementById("resultHeading");
+
+
+/* =========================================================
+   LOAD DATA
+========================================================= */
+
+const DATA =
+    window.EXCUSE_DATA || {};
+
+const conversations =
+    Array.isArray(DATA.conversations)
+        ? DATA.conversations
+        : [];
+
+
+if (!conversations.length) {
+
+    container.innerHTML = `
+        <div class="conversation-card">
+
+            <div class="result-label">
+                ERROR
+            </div>
+
+            <h3>
+                No conversations were found.
+            </h3>
+
+            <p style="color:#777;">
+                Check data/content.js and make sure
+                it contains EXCUSE_DATA.conversations.
+            </p>
+
+        </div>
+    `;
+
+    throw new Error(
+        "No conversations found in EXCUSE_DATA."
+    );
+}
+
+
+/* =========================================================
+   USED CONVERSATIONS
+========================================================= */
+
+const usedIndexes = new Set();
+
+
+/* =========================================================
+   GET UNIQUE RANDOM CONVERSATION
+========================================================= */
+
+function getRandomConversation() {
+
+    /*
+        If there are still unused conversations,
+        choose only from unused ones.
+    */
+
+    if (
+        usedIndexes.size >=
+        conversations.length
+    ) {
+
+        usedIndexes.clear();
+    }
+
+
+    let index;
+
+    do {
+
+        index =
+            Math.floor(
+                Math.random() *
+                conversations.length
+            );
+
+    } while (
+        usedIndexes.has(index)
     );
 
-const used = new Set();
+
+    usedIndexes.add(index);
+
+    return conversations[index];
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
 
 function escapeHTML(value) {
 
-    return String(value)
+    return String(
+        value ?? ""
+    )
         .replaceAll("&", "&amp;")
         .replaceAll("<", "&lt;")
         .replaceAll(">", "&gt;")
@@ -19,321 +123,525 @@ function escapeHTML(value) {
         .replaceAll("'", "&#039;");
 }
 
-function randomIndex(max) {
 
-    return Math.floor(
-        Math.random() * max
-    );
-}
+/* =========================================================
+   NORMALIZE DATA
+========================================================= */
 
-function getRandomConversation() {
+function normalizeConversation(item) {
+
+    /*
+        Format 1:
+
+        {
+            title: "...",
+            style: "...",
+            messages: [...]
+        }
+
+        Format 2:
+
+        {
+            situation: "...",
+            style: "...",
+            dialogue: [...]
+        }
+
+        Format 3:
+
+        {
+            conversation: [...]
+        }
+    */
+
+
+    let messages = [];
+
 
     if (
-        used.size >=
-        data.conversations.length
+        Array.isArray(
+            item.messages
+        )
     ) {
-        used.clear();
+
+        messages =
+            item.messages;
+
+    } else if (
+        Array.isArray(
+            item.dialogue
+        )
+    ) {
+
+        messages =
+            item.dialogue;
+
+    } else if (
+        Array.isArray(
+            item.conversation
+        )
+    ) {
+
+        messages =
+            item.conversation;
     }
 
-    let index;
 
-    do {
+    /*
+        Normalize every message.
+    */
 
-        index =
-            randomIndex(
-                data.conversations.length
-            );
+    messages =
+        messages.map(
+            message => {
 
-    } while (used.has(index));
+                if (
+                    typeof message ===
+                    "string"
+                ) {
 
-    used.add(index);
+                    return {
+                        speaker: "Someone",
+                        text: message
+                    };
+                }
 
-    return data.conversations[index];
-}
 
-function render(conversation) {
+                return {
 
-    return `
+                    speaker:
+                        message.speaker ||
+                        message.character ||
+                        message.role ||
+                        "Someone",
 
-        <article class="conversation-card">
-
-            <div class="conversation-header">
-
-                <span>
-                    ${escapeHTML(
-                        conversation.title
-                    )}
-                </span>
-
-                <span class="badge">
-                    ${escapeHTML(
-                        conversation.style
-                    )}
-                </span>
-
-            </div>
-
-            <div class="chat">
-
-                ${conversation.lines.map(line => `
-
-                    <div class="message">
-
-                        <div class="speaker">
-                            ${escapeHTML(
-                                line.speaker
-                            )}
-                        </div>
-
-                        <div class="bubble">
-                            ${escapeHTML(
-                                line.text
-                            )}
-                        </div>
-
-                    </div>
-
-                `).join("")}
-
-            </div>
-
-            <div class="conversation-actions">
-
-                <button
-                    onclick="copyConversation(${conversation.id})"
-                >
-                    COPY
-                </button>
-
-                <button
-                    onclick="makeScreenshot(${conversation.id})"
-                >
-                    📸 SCREENSHOT
-                </button>
-
-            </div>
-
-        </article>
-
-    `;
-}
-
-function showRandomConversation() {
-
-    const conversation =
-        getRandomConversation();
-
-    container.innerHTML =
-        render(conversation);
-}
-
-function findConversation(id) {
-
-    return data.conversations.find(
-        item => item.id === id
-    );
-}
-
-function copyConversation(id) {
-
-    const conversation =
-        findConversation(id);
-
-    if (!conversation) {
-        return;
-    }
-
-    const text =
-        conversation.lines
-            .map(
-                line =>
-                    `${line.speaker}: ${line.text}`
-            )
-            .join("\n\n");
-
-    navigator.clipboard
-        .writeText(text)
-        .then(() => alert("Copied."));
-}
-
-function makeScreenshot(id) {
-
-    const conversation =
-        findConversation(id);
-
-    if (!conversation) {
-        return;
-    }
-
-    const canvas =
-        document.createElement("canvas");
-
-    const width = 1200;
-    const height = 700;
-
-    canvas.width = width;
-    canvas.height = height;
-
-    const ctx =
-        canvas.getContext("2d");
-
-    ctx.fillStyle = "#090909";
-
-    ctx.fillRect(
-        0,
-        0,
-        width,
-        height
-    );
-
-    ctx.fillStyle = "#ffffff";
-
-    ctx.textAlign = "center";
-
-    ctx.font =
-        "bold 42px Arial";
-
-    ctx.fillText(
-        "☠️ EXCUSE-AS-A-SERVICE",
-        width / 2,
-        70
-    );
-
-    ctx.font =
-        "bold 28px Arial";
-
-    ctx.fillStyle = "#dddddd";
-
-    ctx.fillText(
-        conversation.title,
-        width / 2,
-        120
-    );
-
-    ctx.textAlign = "left";
-
-    let y = 190;
-
-    conversation.lines.forEach(line => {
-
-        ctx.font =
-            "bold 22px Arial";
-
-        ctx.fillStyle =
-            "#999999";
-
-        ctx.fillText(
-            line.speaker,
-            90,
-            y
+                    text:
+                        message.text ||
+                        message.message ||
+                        message.content ||
+                        ""
+                };
+            }
         );
 
-        y += 32;
 
-        ctx.font =
-            "22px Arial";
+    return {
 
-        ctx.fillStyle =
-            "#ffffff";
+        title:
+            item.title ||
+            item.situation ||
+            "Random Conversation",
 
-        const words =
-            line.text.split(" ");
+        style:
+            item.style ||
+            "random",
 
-        let current = "";
-
-        for (const word of words) {
-
-            const test =
-                current
-                    ? current + " " + word
-                    : word;
-
-            if (
-                ctx.measureText(test).width >
-                1000
-            ) {
-
-                ctx.fillText(
-                    current,
-                    90,
-                    y
-                );
-
-                y += 32;
-
-                current = word;
-
-            } else {
-
-                current = test;
-
-            }
-
-        }
-
-        if (current) {
-
-            ctx.fillText(
-                current,
-                90,
-                y
-            );
-
-            y += 32;
-        }
-
-        y += 35;
-
-    });
-
-    canvas.toBlob(async blob => {
-
-        if (!blob) {
-            return;
-        }
-
-        const file =
-            new File(
-                [blob],
-                "conversation.png",
-                {
-                    type: "image/png"
-                }
-            );
-
-        if (
-            navigator.share &&
-            navigator.canShare &&
-            navigator.canShare({
-                files: [file]
-            })
-        ) {
-
-            await navigator.share({
-                title:
-                    "Excuse-as-a-Service",
-                files: [file]
-            });
-
-        } else {
-
-            const link =
-                document.createElement("a");
-
-            link.download =
-                "conversation.png";
-
-            link.href =
-                URL.createObjectURL(blob);
-
-            link.click();
-
-            URL.revokeObjectURL(
-                link.href
-            );
-        }
-
-    }, "image/png");
+        messages
+    };
 }
 
-showRandomConversation();
+
+/* =========================================================
+   PLAIN TEXT
+========================================================= */
+
+function conversationToText(data) {
+
+    let text =
+        "☠️ EXCUSE-AS-A-SERVICE\n\n";
+
+
+    if (data.title) {
+
+        text +=
+            data.title +
+            "\n\n";
+    }
+
+
+    data.messages.forEach(
+        message => {
+
+            text +=
+                `${message.speaker}: `;
+
+            text +=
+                `${message.text}\n\n`;
+        }
+    );
+
+
+    return text.trim();
+}
+
+
+/* =========================================================
+   COPY
+========================================================= */
+
+async function copyConversation(
+    data,
+    button
+) {
+
+    const text =
+        conversationToText(data);
+
+
+    try {
+
+        await navigator.clipboard.writeText(
+            text
+        );
+
+    } catch {
+
+        const textarea =
+            document.createElement(
+                "textarea"
+            );
+
+        textarea.value =
+            text;
+
+        textarea.style.position =
+            "fixed";
+
+        textarea.style.left =
+            "-9999px";
+
+        document.body.appendChild(
+            textarea
+        );
+
+        textarea.select();
+
+        document.execCommand(
+            "copy"
+        );
+
+        textarea.remove();
+    }
+
+
+    button.textContent =
+        "✓ COPIED";
+
+
+    setTimeout(
+        () => {
+
+            button.textContent =
+                "📋 COPY";
+
+        },
+        1500
+    );
+}
+
+
+/* =========================================================
+   RENDER CONVERSATION
+========================================================= */
+
+function renderConversation(
+    item,
+    number
+) {
+
+    const data =
+        normalizeConversation(
+            item
+        );
+
+
+    const card =
+        document.createElement(
+            "article"
+        );
+
+
+    card.className =
+        "conversation-card";
+
+
+    let messagesHTML = "";
+
+
+    data.messages.forEach(
+        message => {
+
+            messagesHTML += `
+
+                <div class="message">
+
+                    <div class="speaker">
+                        ${escapeHTML(
+                            message.speaker
+                        )}
+                    </div>
+
+                    <div class="bubble">
+                        ${escapeHTML(
+                            message.text
+                        )}
+                    </div>
+
+                </div>
+
+            `;
+        }
+    );
+
+
+    /*
+        If no messages exist,
+        still show the conversation.
+    */
+
+    if (!messagesHTML) {
+
+        messagesHTML = `
+
+            <div class="message">
+
+                <div class="speaker">
+                    RANDOM
+                </div>
+
+                <div class="bubble">
+                    ${escapeHTML(
+                        data.title
+                    )}
+                </div>
+
+            </div>
+
+        `;
+    }
+
+
+    card.innerHTML = `
+
+        <div class="conversation-header">
+
+            <span>
+                CONVERSATION #${number}
+            </span>
+
+            <span class="badge">
+                ${escapeHTML(
+                    data.style
+                )}
+            </span>
+
+        </div>
+
+
+        <div class="result-label">
+
+            ${escapeHTML(
+                data.title
+            )}
+
+        </div>
+
+
+        ${messagesHTML}
+
+
+        <div class="conversation-actions">
+
+            <button
+                type="button"
+                class="copy-button"
+            >
+                📋 COPY
+            </button>
+
+            <button
+                type="button"
+                class="screenshot-button"
+            >
+                📸 SCREENSHOT
+            </button>
+
+        </div>
+
+    `;
+
+
+    /*
+        COPY
+    */
+
+    const copyButton =
+        card.querySelector(
+            ".copy-button"
+        );
+
+
+    copyButton.addEventListener(
+        "click",
+        () => {
+
+            copyConversation(
+                data,
+                copyButton
+            );
+
+        }
+    );
+
+
+    /*
+        SCREENSHOT
+    */
+
+    const screenshotButton =
+        card.querySelector(
+            ".screenshot-button"
+        );
+
+
+    screenshotButton.addEventListener(
+        "click",
+        () => {
+
+            screenshotConversation(
+                data,
+                screenshotButton
+            );
+
+        }
+    );
+
+
+    return card;
+}
+
+
+/* =========================================================
+   GENERATE
+========================================================= */
+
+function generateConversations() {
+
+    /*
+        IMPORTANT:
+        Read the SELECTED VALUE every time.
+    */
+
+    const amount =
+        parseInt(
+            countSelect.value,
+            10
+        );
+
+
+    if (
+        !amount ||
+        amount < 1
+    ) {
+
+        return;
+    }
+
+
+    /*
+        Clear old conversations.
+    */
+
+    container.innerHTML = "";
+
+
+    /*
+        Make EXACTLY the selected amount,
+        provided the dataset contains enough
+        unique conversations.
+    */
+
+    for (
+        let i = 0;
+        i < amount;
+        i++
+    ) {
+
+        const conversation =
+            getRandomConversation();
+
+
+        const card =
+            renderConversation(
+                conversation,
+                i + 1
+            );
+
+
+        container.appendChild(
+            card
+        );
+    }
+
+
+    /*
+        Update heading.
+    */
+
+    resultHeading.textContent =
+        `${amount} RANDOM CONVERSATION${
+            amount === 1
+                ? ""
+                : "S"
+        }`;
+}
+
+
+/* =========================================================
+   SELECT CHANGE
+========================================================= */
+
+/*
+    THIS is the important part.
+
+    When the user changes:
+
+    1 → immediately generate 1
+    3 → immediately generate 3
+    5 → immediately generate 5
+    10 → immediately generate 10
+    20 → immediately generate 20
+    50 → immediately generate 50
+*/
+
+countSelect.addEventListener(
+    "change",
+    generateConversations
+);
+
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+generateButton.addEventListener(
+    "click",
+    generateConversations
+);
+
+
+/* =========================================================
+   GENERATE MORE
+========================================================= */
+
+generateMoreButton.addEventListener(
+    "click",
+    generateConversations
+);
+
+
+/* =========================================================
+   INITIAL LOAD
+========================================================= */
+
+generateConversations();
