@@ -2,145 +2,82 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <meta
-        name="description"
-        content="EXCUSE-AS-A-SERVICE — Ask anything. Get an excuse."
-    >
-
-    <meta
-        name="theme-color"
-        content="#070707"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>EXCUSE-AS-A-SERVICE</title>
 
-    <link
-        rel="stylesheet"
-        href="style.css"
+    <meta
+        name="description"
+        content="Ask anything. Get an excuse."
     >
+
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <!-- =====================================================
-         TOP NAVIGATION
-    ====================================================== -->
+<header class="topbar">
 
-    <header class="topbar">
+    <a href="index.html" class="logo">
+        ☠️ EXCUSE-AS-A-SERVICE
+    </a>
 
-        <a
-            href="index.html"
-            class="logo"
-            aria-label="EXCUSE-AS-A-SERVICE Home"
-        >
-            ☠️ EXCUSE-AS-A-SERVICE
-        </a>
+    <nav>
+        <a href="index.html" class="active">Ask</a>
+        <a href="conversations.html">Conversations</a>
+    </nav>
 
-        <nav aria-label="Main navigation">
-
-            <a
-                href="index.html"
-                class="active"
-            >
-                Ask
-            </a>
-
-            <a
-                href="conversations.html"
-            >
-                Conversations
-            </a>
-
-        </nav>
-
-    </header>
+</header>
 
 
-    <!-- =====================================================
-         MAIN
-    ====================================================== -->
+<main class="container">
 
-    <main class="container">
+    <section class="hero">
 
-        <!-- =================================================
-             HERO
-        ================================================== -->
+        <div class="skull">☠️</div>
 
-        <section class="hero">
+        <h1>
+            ASK ANYTHING.
+            <br>
+            GET AN EXCUSE.
+        </h1>
 
-            <div
-                class="skull"
-                aria-hidden="true"
-            >
-                ☠️
-            </div>
+        <p>
+            Believable. Idiotic. Sarcastic. Dark.
+            Completely unnecessary.
+        </p>
 
-            <h1>
-                ASK ANYTHING.
-                <br>
-                GET AN EXCUSE.
-            </h1>
-
-            <p>
-                Believable. Idiotic. Sarcastic. Dark.
-                Completely unnecessary.
-            </p>
-
-        </section>
+    </section>
 
 
-        <!-- =================================================
-             GENERATOR
-        ================================================== -->
+    <!-- GENERATOR -->
 
-        <section
-            class="generator-controls"
-            aria-label="Excuse generator"
-        >
+    <section class="generator">
 
-            <!-- =============================================
-                 WHAT HAPPENED
-            ============================================== -->
+        <div class="input-card">
 
-            <div class="control-group">
+            <label for="situation">
+                WHAT HAPPENED?
+            </label>
 
-                <label for="situation">
-                    WHAT HAPPENED?
-                </label>
+            <textarea
+                id="situation"
+                placeholder="What happened?"
+                rows="5"
+            ></textarea>
 
-                <textarea
-                    id="situation"
-                    name="situation"
-                    rows="5"
-                    maxlength="2000"
-                    placeholder="I missed an important meeting because..."
-                    autocomplete="off"
-                    spellcheck="true"
-                ></textarea>
-
-            </div>
+        </div>
 
 
-            <!-- =============================================
-                 STYLE
-            ============================================== -->
+        <div class="settings-grid">
 
-            <div class="control-group">
+            <div class="input-card">
 
                 <label for="style">
                     STYLE
                 </label>
 
-                <select
-                    id="style"
-                    name="style"
-                >
+                <select id="style">
 
                     <option value="believable">
                         Believable
@@ -187,142 +124,73 @@
             </div>
 
 
-            <!-- =============================================
-                 NUMBER OF CONVERSATIONS
-            ============================================== -->
-
-            <div class="control-group">
+            <div class="input-card">
 
                 <label for="conversationCount">
                     CONVERSATIONS
                 </label>
 
-                <select
-                    id="conversationCount"
-                    name="conversationCount"
-                >
+                <select id="conversationCount">
 
-                    <option value="1">
-                        1
-                    </option>
-
-                    <option value="3">
-                        3
-                    </option>
-
-                    <option
-                        value="5"
-                        selected
-                    >
-                        5
-                    </option>
-
-                    <option value="10">
-                        10
-                    </option>
-
-                    <option value="20">
-                        20
-                    </option>
-
-                    <option value="50">
-                        50
-                    </option>
+                    <option value="1">1</option>
+                    <option value="3">3</option>
+                    <option value="5" selected>5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
 
                 </select>
 
             </div>
 
-
-            <!-- =============================================
-                 GENERATE
-            ============================================== -->
-
-            <button
-                id="generateButton"
-                class="primary-button"
-                type="button"
-            >
-                ☠️ GENERATE
-            </button>
-
-        </section>
+        </div>
 
 
-        <!-- =================================================
-             RESULTS
-        ================================================== -->
-
-        <section
-            class="results"
-            aria-live="polite"
-            aria-atomic="false"
+        <button
+            id="generateButton"
+            class="primary-button"
+            type="button"
         >
+            ☠️ GENERATE
+        </button>
 
-            <div
-                class="section-heading"
-                id="resultHeading"
-            >
-                GENERATED EXCUSES
-            </div>
+    </section>
 
 
-            <!--
-                app.js inserts generated conversations here.
-            -->
+    <!-- RESULTS -->
 
-            <div
-                id="results"
-            ></div>
+    <section class="results">
 
+        <div
+            class="section-heading"
+            id="resultHeading"
+        >
+            GENERATED EXCUSES
+        </div>
 
-            <!--
-                Compatibility container.
+        <div id="results"></div>
 
-                If your existing app.js uses
-                #resultContainer instead of #results,
-                it can still be supported by the JS.
-            -->
+    </section>
 
-            <div
-                id="resultContainer"
-            ></div>
-
-        </section>
-
-    </main>
+</main>
 
 
-    <!-- =====================================================
-         FOOTER
-    ====================================================== -->
-
-    <footer>
-        EXCUSE-AS-A-SERVICE · NO ACCOUNTS · NO TRACKING · NO DATABASE
-    </footer>
+<footer>
+    EXCUSE-AS-A-SERVICE · NO ACCOUNTS · NO TRACKING · NO DATABASE
+</footer>
 
 
-    <!-- =====================================================
-         DATA
-    ====================================================== -->
+<!-- DATA -->
 
-    <script src="data/content.js"></script>
+<script src="data/content.js"></script>
 
+<!-- SCREENSHOT SUPPORT -->
 
-    <!-- =====================================================
-         SCREENSHOT ENGINE
-    ====================================================== -->
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
-    <script
-        src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"
-    ></script>
+<!-- APPLICATION -->
 
-
-    <!-- =====================================================
-         MAIN APPLICATION
-    ====================================================== -->
-
-    <script src="app.js"></script>
+<script src="app.js"></script>
 
 </body>
 </html>
