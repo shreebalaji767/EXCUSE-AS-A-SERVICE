@@ -1,281 +1,276 @@
-/* =========================================================
-   EXCUSE-AS-A-SERVICE
-   MAIN APP
-   Complete app.js
-========================================================= */
-
 (() => {
+
     "use strict";
 
-    /* =====================================================
-       DATA
-    ===================================================== */
 
-    const DATA = window.EXCUSE_DATA || {};
-
-    const conversations = Array.isArray(DATA.conversations)
-        ? DATA.conversations
-        : [];
+    const DATA =
+        window.EXCUSE_DATA || {};
 
 
-    /* =====================================================
-       ELEMENTS
-    ===================================================== */
+    const conversations =
+        Array.isArray(DATA.conversations)
+            ? DATA.conversations
+            : [];
 
-    const situationInput =
+
+    const situation =
         document.getElementById("situation");
 
-    const styleSelect =
+
+    const styleInput =
         document.getElementById("style");
+
 
     const countSelect =
         document.getElementById("conversationCount");
 
+
+    const countValue =
+        document.getElementById("countValue");
+
+
+    const countDisplay =
+        document.getElementById("countDisplay");
+
+
+    const minus =
+        document.getElementById("countMinus");
+
+
+    const plus =
+        document.getElementById("countPlus");
+
+
     const generateButton =
         document.getElementById("generateButton");
 
-    const resultsContainer =
+
+    const results =
         document.getElementById("results");
 
-    const resultHeading =
+
+    const emptyState =
+        document.getElementById("emptyState");
+
+
+    const heading =
         document.getElementById("resultHeading");
 
 
-    /* =====================================================
-       STATE
-    ===================================================== */
-
-    const usedIndexes = new Set();
+    const resultCount =
+        document.getElementById("resultCount");
 
 
-    /* =====================================================
-       ESCAPE HTML
-    ===================================================== */
+    const styleButtons =
+        [
+            ...document.querySelectorAll(
+                ".style-option"
+            )
+        ];
+
+
+    const counts =
+        [
+            1,
+            3,
+            5,
+            10,
+            20,
+            50
+        ];
+
+
+    let used =
+        new Set();
+
+
+    /* ESCAPE */
 
     function escapeHTML(value) {
 
         return String(value ?? "")
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
-    }
+            .replace(
+                /[&<>"']/g,
+                character => {
 
+                    const map = {
 
-    /* =====================================================
-       RANDOM CONVERSATION
-    ===================================================== */
+                        "&": "&amp;",
+                        "<": "&lt;",
+                        ">": "&gt;",
+                        '"': "&quot;",
+                        "'": "&#039;"
 
-    function getRandomConversation(preferredStyle = "") {
+                    };
 
-        if (!conversations.length) {
-            return null;
-        }
+                    return map[character];
 
-
-        let available = conversations.filter(
-            (_, index) => !usedIndexes.has(index)
-        );
-
-
-        /*
-         * Prefer the selected style.
-         */
-
-        if (preferredStyle) {
-
-            const styleMatches =
-                available.filter(
-                    conversation =>
-                        String(
-                            conversation.style || ""
-                        ).toLowerCase() ===
-                        preferredStyle.toLowerCase()
-                );
-
-            if (styleMatches.length) {
-                available = styleMatches;
-            }
-        }
-
-
-        /*
-         * If the current pool is exhausted,
-         * start a new runtime cycle.
-         */
-
-        if (!available.length) {
-
-            usedIndexes.clear();
-
-            available = [...conversations];
-
-            if (preferredStyle) {
-
-                const styleMatches =
-                    available.filter(
-                        conversation =>
-                            String(
-                                conversation.style || ""
-                            ).toLowerCase() ===
-                            preferredStyle.toLowerCase()
-                    );
-
-                if (styleMatches.length) {
-                    available = styleMatches;
                 }
-            }
-        }
+            );
 
-
-        const selected =
-            available[
-                Math.floor(
-                    Math.random() *
-                    available.length
-                )
-            ];
-
-
-        const realIndex =
-            conversations.indexOf(selected);
-
-
-        if (realIndex !== -1) {
-            usedIndexes.add(realIndex);
-        }
-
-
-        return selected;
     }
 
 
-    /* =====================================================
-       SPEAKERS
-    ===================================================== */
+    /* COUNT */
 
-    function getSpeakers(messages) {
+    function setCount(value) {
 
-        const speakers = [];
+        let number =
+            Number(value);
 
-        messages.forEach(message => {
 
-            const name =
-                String(
-                    message.speaker ||
-                    "Unknown"
-                ).trim();
+        if (!counts.includes(number)) {
 
-            if (!speakers.includes(name)) {
-                speakers.push(name);
-            }
-        });
+            number = 5;
 
-        return speakers;
+        }
+
+
+        countSelect.value =
+            String(number);
+
+
+        countValue.textContent =
+            number;
+
+
+        countDisplay.textContent =
+            number;
+
     }
 
 
-    /* =====================================================
-       MESSAGE SIDE
-    ===================================================== */
+    /* STYLE */
 
-    function getSide(
-        message,
-        speakers,
-        speakerMap
-    ) {
+    function selectedStyle() {
 
-        /*
-         * If generator provides speakerId,
-         * use it.
-         */
+        return styleInput?.value ||
+            "believable";
+
+    }
+
+
+    /* RANDOM */
+
+    function randomIndex(pool) {
+
+        if (!pool.length) {
+
+            return -1;
+
+        }
+
 
         if (
-            message.speakerId !== undefined &&
-            message.speakerId !== null
+            used.size >=
+            conversations.length
         ) {
 
-            return Number(
-                message.speakerId
-            ) === 0
-                ? "incoming"
-                : "outgoing";
+            used.clear();
+
         }
 
 
-        const speaker =
-            String(
-                message.speaker ||
-                "Unknown"
-            ).trim();
+        let index;
 
 
-        /*
-         * Two-speaker conversation.
-         */
+        do {
 
-        if (speakers.length >= 2) {
+            index =
+                Math.floor(
+                    Math.random() *
+                    pool.length
+                );
 
-            if (
-                speaker === speakers[0]
-            ) {
-                return "incoming";
-            }
-
-            if (
-                speaker === speakers[1]
-            ) {
-                return "outgoing";
-            }
         }
 
-
-        /*
-         * Fallback for conversations
-         * containing more speakers.
-         */
-
-        if (!speakerMap.has(speaker)) {
-
-            speakerMap.set(
-                speaker,
-                speakerMap.size % 2 === 0
-                    ? "incoming"
-                    : "outgoing"
-            );
-        }
-
-
-        return speakerMap.get(
-            speaker
+        while (
+            used.has(
+                pool[index]
+            )
         );
+
+
+        used.add(
+            pool[index]
+        );
+
+
+        return pool[index];
+
     }
 
 
-    /* =====================================================
-       TIME
-    ===================================================== */
+    /* PICK */
+
+    function pickConversation(style) {
+
+        const styled =
+            conversations
+                .map(
+                    (conversation, index) => ({
+                        conversation,
+                        index
+                    })
+                )
+                .filter(
+                    item =>
+                        String(
+                            item.conversation.style ||
+                            ""
+                        ).toLowerCase() ===
+                        style
+                );
+
+
+        const pool =
+            styled.length
+                ? styled.map(
+                    item => item.index
+                )
+                : conversations.map(
+                    (_, index) => index
+                );
+
+
+        const index =
+            randomIndex(pool);
+
+
+        if (index < 0) {
+
+            return null;
+
+        }
+
+
+        return conversations[index];
+
+    }
+
+
+    /* TIME */
 
     function getTime(index) {
 
-        const totalMinutes =
+        const total =
             9 * 60 +
+            7 +
             index * 7;
 
 
         const hour24 =
             Math.floor(
-                totalMinutes / 60
+                total / 60
             ) % 24;
 
 
-        const minute =
-            totalMinutes % 60;
+        const minutes =
+            total % 60;
 
 
         const hour12 =
-            hour24 % 12 || 12;
+            ((hour24 + 11) % 12) + 1;
 
 
         const suffix =
@@ -285,229 +280,96 @@
 
 
         return (
-            `${hour12}:` +
-            `${String(minute).padStart(2, "0")} ` +
+            hour12 +
+            ":" +
+            String(minutes)
+                .padStart(2, "0") +
+            " " +
             suffix
         );
+
     }
 
 
-    /* =====================================================
-       COPY
-    ===================================================== */
+    /* SIDES */
 
-    async function copyConversation(
-        conversation
-    ) {
+    function getSides(messages) {
 
-        const messages =
-            Array.isArray(
-                conversation.messages
-            )
-                ? conversation.messages
-                : [];
+        const speakerIds =
+            new Map();
 
 
-        const text =
-            messages
-                .map(
-                    message =>
-                        `${message.speaker}: ${message.text}`
+        let nextId = 0;
+
+
+        return messages.map(
+            message => {
+
+                if (
+                    message.speakerId !==
+                    undefined
+                ) {
+
+                    return Number(
+                        message.speakerId
+                    ) === 0
+                        ? "incoming"
+                        : "outgoing";
+
+                }
+
+
+                const speaker =
+                    String(
+                        message.speaker ||
+                        "Unknown"
+                    );
+
+
+                if (
+                    !speakerIds.has(
+                        speaker
+                    )
+                ) {
+
+                    speakerIds.set(
+                        speaker,
+                        nextId++
+                    );
+
+                }
+
+
+                return (
+                    speakerIds.get(
+                        speaker
+                    ) % 2 === 0
                 )
-                .join("\n");
+                    ? "incoming"
+                    : "outgoing";
 
-
-        try {
-
-            await navigator.clipboard.writeText(
-                text
-            );
-
-
-            showTemporaryMessage(
-                "COPIED"
-            );
-
-        } catch {
-
-            const textarea =
-                document.createElement(
-                    "textarea"
-                );
-
-            textarea.value = text;
-
-            document.body.appendChild(
-                textarea
-            );
-
-            textarea.select();
-
-            document.execCommand(
-                "copy"
-            );
-
-            textarea.remove();
-
-
-            showTemporaryMessage(
-                "COPIED"
-            );
-        }
-    }
-
-
-    /* =====================================================
-       SCREENSHOT
-    ===================================================== */
-
-    async function screenshotConversation(
-        card,
-        number
-    ) {
-
-        if (
-            typeof html2canvas ===
-            "undefined"
-        ) {
-
-            alert(
-                "Screenshot support is not available."
-            );
-
-            return;
-        }
-
-
-        try {
-
-            const canvas =
-                await html2canvas(
-                    card,
-                    {
-                        backgroundColor:
-                            "#0c0c0c",
-
-                        scale:
-                            Math.min(
-                                window.devicePixelRatio || 1,
-                                2
-                            ),
-
-                        useCORS:
-                            true
-                    }
-                );
-
-
-            const link =
-                document.createElement(
-                    "a"
-                );
-
-
-            link.download =
-                `excuse-${number}.png`;
-
-
-            link.href =
-                canvas.toDataURL(
-                    "image/png"
-                );
-
-
-            link.click();
-
-        } catch (error) {
-
-            console.error(
-                "Screenshot error:",
-                error
-            );
-
-            alert(
-                "Could not create screenshot."
-            );
-        }
-    }
-
-
-    /* =====================================================
-       TEMPORARY MESSAGE
-    ===================================================== */
-
-    function showTemporaryMessage(
-        message
-    ) {
-
-        const notice =
-            document.createElement(
-                "div"
-            );
-
-
-        notice.textContent =
-            message;
-
-
-        notice.style.position =
-            "fixed";
-
-        notice.style.left =
-            "50%";
-
-        notice.style.bottom =
-            "25px";
-
-        notice.style.transform =
-            "translateX(-50%)";
-
-        notice.style.zIndex =
-            "99999";
-
-        notice.style.padding =
-            "11px 18px";
-
-        notice.style.background =
-            "#ffffff";
-
-        notice.style.color =
-            "#000000";
-
-        notice.style.borderRadius =
-            "999px";
-
-        notice.style.fontSize =
-            "12px";
-
-        notice.style.fontWeight =
-            "900";
-
-        notice.style.boxShadow =
-            "0 10px 35px rgba(0,0,0,.5)";
-
-
-        document.body.appendChild(
-            notice
+            }
         );
 
-
-        setTimeout(() => {
-
-            notice.remove();
-
-        }, 1400);
     }
 
 
-    /* =====================================================
-       CREATE CONVERSATION CARD
-    ===================================================== */
+    /* CARD */
 
     function createConversationCard(
         conversation,
-        number
+        index
     ) {
+
+        const article =
+            document.createElement(
+                "article"
+            );
+
+
+        article.className =
+            "conversation-card";
+
 
         const messages =
             Array.isArray(
@@ -518,50 +380,28 @@
 
 
         const speakers =
-            getSpeakers(messages);
-
-
-        const speakerMap =
-            new Map();
-
-
-        const firstSpeaker =
-            speakers[0] ||
-            "Unknown";
-
-
-        const secondSpeaker =
-            speakers[1] ||
-            "Chat";
+            [
+                ...new Set(
+                    messages.map(
+                        message =>
+                            String(
+                                message.speaker ||
+                                "Unknown"
+                            )
+                    )
+                )
+            ];
 
 
         const title =
             conversation.title ||
-            `${firstSpeaker} & ${secondSpeaker}`;
+            speakers
+                .slice(0, 2)
+                .join(" & ") ||
+            "Conversation";
 
 
-        const style =
-            conversation.style ||
-            "believable";
-
-
-        /* ================================================
-           CARD
-        ================================================= */
-
-        const card =
-            document.createElement(
-                "article"
-            );
-
-
-        card.className =
-            "conversation-card";
-
-
-        /* ================================================
-           HEADER
-        ================================================= */
+        /* HEADER */
 
         const header =
             document.createElement(
@@ -573,65 +413,35 @@
             "conversation-header";
 
 
-        const avatar =
-            document.createElement(
-                "div"
-            );
+        header.innerHTML = `
+
+            <div class="conversation-avatar">
+                👤
+            </div>
+
+            <div class="conversation-info">
+
+                <h3>
+                    ${escapeHTML(title)}
+                </h3>
+
+                <p>
+                    ● ONLINE
+                </p>
+
+            </div>
+
+            <span class="conversation-style">
+                ${escapeHTML(
+                    conversation.style ||
+                    "casual"
+                )}
+            </span>
+
+        `;
 
 
-        avatar.className =
-            "conversation-avatar";
-
-
-        const headerInfo =
-            document.createElement(
-                "div"
-            );
-
-
-        const heading =
-            document.createElement(
-                "h2"
-            );
-
-
-        heading.textContent =
-            title;
-
-
-        const small =
-            document.createElement(
-                "small"
-            );
-
-
-        small.textContent =
-            `${style} · #${number}`;
-
-
-        headerInfo.appendChild(
-            heading
-        );
-
-
-        header.appendChild(
-            avatar
-        );
-
-
-        header.appendChild(
-            headerInfo
-        );
-
-
-        header.appendChild(
-            small
-        );
-
-
-        /* ================================================
-           CHAT
-        ================================================= */
+        /* CHAT */
 
         const dialogue =
             document.createElement(
@@ -643,8 +453,12 @@
             "conversation-dialogue";
 
 
+        const sides =
+            getSides(messages);
+
+
         messages.forEach(
-            (message, index) => {
+            (message, messageIndex) => {
 
                 const text =
                     String(
@@ -658,21 +472,6 @@
                 }
 
 
-                const speaker =
-                    String(
-                        message.speaker ||
-                        "Unknown"
-                    ).trim();
-
-
-                const side =
-                    getSide(
-                        message,
-                        speakers,
-                        speakerMap
-                    );
-
-
                 const row =
                     document.createElement(
                         "div"
@@ -680,7 +479,8 @@
 
 
                 row.className =
-                    `conversation-message ${side}`;
+                    "conversation-message " +
+                    sides[messageIndex];
 
 
                 const content =
@@ -693,18 +493,19 @@
                     "message-content";
 
 
-                const speakerElement =
+                const speaker =
                     document.createElement(
                         "div"
                     );
 
 
-                speakerElement.className =
+                speaker.className =
                     "message-speaker";
 
 
-                speakerElement.textContent =
-                    speaker;
+                speaker.textContent =
+                    message.speaker ||
+                    "Unknown";
 
 
                 const bubble =
@@ -719,19 +520,18 @@
 
                 bubble.setAttribute(
                     "data-time",
-                    getTime(index)
-                );
-
-
-                bubble.appendChild(
-                    document.createTextNode(
-                        text
+                    getTime(
+                        messageIndex
                     )
                 );
 
 
+                bubble.textContent =
+                    text;
+
+
                 if (
-                    side ===
+                    sides[messageIndex] ===
                     "outgoing"
                 ) {
 
@@ -746,21 +546,18 @@
 
 
                     check.textContent =
-                        " ✓✓";
+                        "✓✓";
 
 
                     bubble.appendChild(
                         check
                     );
+
                 }
 
 
-                content.appendChild(
-                    speakerElement
-                );
-
-
-                content.appendChild(
+                content.append(
+                    speaker,
                     bubble
                 );
 
@@ -778,9 +575,7 @@
         );
 
 
-        /* ================================================
-           ACTIONS
-        ================================================= */
+        /* ACTIONS */
 
         const actions =
             document.createElement(
@@ -790,6 +585,20 @@
 
         actions.className =
             "conversation-actions";
+
+
+        const fakeInput =
+            document.createElement(
+                "div"
+            );
+
+
+        fakeInput.className =
+            "fake-input";
+
+
+        fakeInput.textContent =
+            "Message...";
 
 
         const copyButton =
@@ -802,20 +611,12 @@
             "button";
 
 
+        copyButton.className =
+            "action-button";
+
+
         copyButton.textContent =
             "COPY";
-
-
-        copyButton.addEventListener(
-            "click",
-            () => {
-
-                copyConversation(
-                    conversation
-                );
-
-            }
-        );
 
 
         const screenshotButton =
@@ -828,8 +629,25 @@
             "button";
 
 
+        screenshotButton.className =
+            "action-button";
+
+
         screenshotButton.textContent =
             "SCREENSHOT";
+
+
+        copyButton.addEventListener(
+            "click",
+            () => {
+
+                copyConversation(
+                    conversation,
+                    copyButton
+                );
+
+            }
+        );
 
 
         screenshotButton.addEventListener(
@@ -837,27 +655,22 @@
             () => {
 
                 screenshotConversation(
-                    card,
-                    number
+                    article,
+                    index
                 );
 
             }
         );
 
 
-        actions.appendChild(
-            copyButton
-        );
-
-
-        actions.appendChild(
+        actions.append(
+            fakeInput,
+            copyButton,
             screenshotButton
         );
 
 
-        /* ================================================
-           META
-        ================================================= */
+        /* META */
 
         const meta =
             document.createElement(
@@ -869,150 +682,267 @@
             "conversation-meta";
 
 
-        const leftMeta =
-            document.createElement(
-                "span"
-            );
+        meta.innerHTML = `
+
+            <span>
+                ${messages.length} messages
+            </span>
+
+            <span>
+                ENCRYPTED WITH ABSOLUTELY NOTHING
+            </span>
+
+        `;
 
 
-        leftMeta.textContent =
-            `${messages.length} messages`;
-
-
-        const rightMeta =
-            document.createElement(
-                "span"
-            );
-
-
-        rightMeta.textContent =
-            "NO DATABASE";
-
-
-        meta.appendChild(
-            leftMeta
-        );
-
-
-        meta.appendChild(
-            rightMeta
-        );
-
-
-        /* ================================================
-           BUILD
-        ================================================= */
-
-        card.appendChild(
-            header
-        );
-
-
-        card.appendChild(
-            dialogue
-        );
-
-
-        card.appendChild(
-            actions
-        );
-
-
-        card.appendChild(
+        article.append(
+            header,
+            dialogue,
+            actions,
             meta
         );
 
 
-        return card;
+        return article;
+
     }
 
 
-    /* =====================================================
-       GENERATE
-    ===================================================== */
+    /* COPY */
+
+    async function copyConversation(
+        conversation,
+        button
+    ) {
+
+        const text =
+            (conversation.messages || [])
+                .map(
+                    message =>
+                        message.speaker +
+                        ": " +
+                        message.text
+                )
+                .join("\n");
+
+
+        try {
+
+            await navigator.clipboard
+                .writeText(text);
+
+        }
+
+        catch {
+
+            const textarea =
+                document.createElement(
+                    "textarea"
+                );
+
+
+            textarea.value =
+                text;
+
+
+            document.body.appendChild(
+                textarea
+            );
+
+
+            textarea.select();
+
+
+            document.execCommand(
+                "copy"
+            );
+
+
+            textarea.remove();
+
+        }
+
+
+        const oldText =
+            button.textContent;
+
+
+        button.textContent =
+            "COPIED";
+
+
+        setTimeout(
+            () => {
+
+                button.textContent =
+                    oldText;
+
+            },
+            1000
+        );
+
+    }
+
+
+    /* SCREENSHOT */
+
+    async function screenshotConversation(
+        element,
+        index
+    ) {
+
+        if (
+            typeof html2canvas ===
+            "undefined"
+        ) {
+
+            alert(
+                "Screenshot engine is unavailable."
+            );
+
+            return;
+
+        }
+
+
+        try {
+
+            const canvas =
+                await html2canvas(
+                    element,
+                    {
+
+                        backgroundColor:
+                            "#0b0b0b",
+
+                        scale:
+                            Math.min(
+                                window.devicePixelRatio ||
+                                1,
+                                2
+                            ),
+
+                        useCORS: true
+
+                    }
+                );
+
+
+            const link =
+                document.createElement(
+                    "a"
+                );
+
+
+            link.download =
+                "excuse-conversation-" +
+                index +
+                ".png";
+
+
+            link.href =
+                canvas.toDataURL(
+                    "image/png"
+                );
+
+
+            link.click();
+
+        }
+
+        catch (error) {
+
+            console.error(
+                error
+            );
+
+
+            alert(
+                "Could not create screenshot."
+            );
+
+        }
+
+    }
+
+
+    /* GENERATE */
 
     function generate() {
 
-        if (!resultsContainer) {
-            return;
-        }
+        const situationText =
+            situation?.value.trim() ||
+            "something went wrong";
 
 
-        let amount =
+        const style =
+            selectedStyle();
+
+
+        const amount =
             Number(
-                countSelect?.value || 5
-            );
+                countSelect?.value
+            ) || 5;
 
 
-        if (
-            !Number.isFinite(amount)
-        ) {
-            amount = 5;
-        }
-
-
-        amount =
-            Math.max(
-                1,
-                Math.min(
-                    amount,
-                    50
-                )
-            );
-
-
-        const selectedStyle =
-            String(
-                styleSelect?.value || ""
-            ).trim();
-
-
-        /*
-         * Clear old results.
-         */
-
-        resultsContainer.innerHTML =
+        results.innerHTML =
             "";
 
 
-        /*
-         * Heading.
-         */
+        if (emptyState) {
 
-        if (resultHeading) {
+            emptyState.style.display =
+                "none";
 
-            resultHeading.textContent =
-                `${amount} GENERATED CONVERSATION${
-                    amount === 1
-                        ? ""
-                        : "S"
-                }`;
         }
 
 
-        /*
-         * No generated data.
-         */
+        heading.textContent =
+            amount +
+            " GENERATED EXCUSE" +
+            (
+                amount === 1
+                    ? ""
+                    : "S"
+            );
+
+
+        resultCount.textContent =
+            amount;
+
 
         if (!conversations.length) {
 
-            resultsContainer.innerHTML = `
+            results.innerHTML = `
+
                 <div class="empty-state">
-                    <h2>NO CONTENT FOUND</h2>
+
+                    <div>
+                        ⚠️
+                    </div>
+
+                    <h3>
+                        No content found.
+                    </h3>
+
                     <p>
-                        Run:
+                        Run
                         python build/generate.py
+                        and reload the site.
                     </p>
+
                 </div>
+
             `;
 
             return;
+
         }
 
 
-        /*
-         * Generate requested number.
-         */
+        generateButton.disabled =
+            true;
+
 
         for (
             let i = 0;
@@ -1021,110 +951,191 @@
         ) {
 
             const conversation =
-                getRandomConversation(
-                    selectedStyle
+                pickConversation(
+                    style
                 );
 
 
             if (!conversation) {
-                continue;
+                break;
             }
 
 
-            const card =
-                createConversationCard(
-                    conversation,
-                    i + 1
+            const copy =
+                JSON.parse(
+                    JSON.stringify(
+                        conversation
+                    )
                 );
 
 
-            resultsContainer.appendChild(
-                card
+            /*
+             * Put the user's situation
+             * into the first question.
+             */
+
+            if (
+                situationText &&
+                copy.messages &&
+                copy.messages.length
+            ) {
+
+                copy.messages[0].text =
+                    situationText
+                        .replace(
+                            /[.!?]+$/,
+                            ""
+                        ) +
+                    "?";
+
+            }
+
+
+            results.appendChild(
+                createConversationCard(
+                    copy,
+                    i + 1
+                )
             );
+
         }
 
 
-        /*
-         * Scroll to results.
-         */
+        generateButton.disabled =
+            false;
 
-        setTimeout(() => {
 
-            if (
-                resultsContainer.children.length
-            ) {
+        setTimeout(
+            () => {
 
-                resultsContainer.scrollIntoView({
+                results.scrollIntoView({
                     behavior: "smooth",
                     block: "start"
                 });
 
-            }
-
-        }, 50);
-    }
-
-
-    /* =====================================================
-       GENERATE BUTTON
-    ===================================================== */
-
-    if (generateButton) {
-
-        generateButton.addEventListener(
-            "click",
-            generate
+            },
+            80
         );
+
     }
 
 
-    /* =====================================================
-       CTRL + ENTER
-    ===================================================== */
+    /* STYLE BUTTONS */
 
-    if (situationInput) {
+    styleButtons.forEach(
+        button => {
 
-        situationInput.addEventListener(
-            "keydown",
-            event => {
+            button.addEventListener(
+                "click",
+                () => {
 
-                if (
-                    event.ctrlKey &&
-                    event.key === "Enter"
-                ) {
+                    styleButtons.forEach(
+                        item =>
+                            item.classList.remove(
+                                "selected"
+                            )
+                    );
 
-                    event.preventDefault();
 
-                    generate();
+                    button.classList.add(
+                        "selected"
+                    );
+
+
+                    styleInput.value =
+                        button.dataset.style;
+
                 }
+            );
 
-            }
-        );
-    }
+        }
+    );
 
 
-    /* =====================================================
-       INITIAL STATE
-    ===================================================== */
+    /* COUNT - */
 
-    document.addEventListener(
-        "DOMContentLoaded",
+    minus?.addEventListener(
+        "click",
         () => {
 
-            /*
-             * Do not automatically generate
-             * on page load.
-             *
-             * User clicks GENERATE.
-             */
+            const index =
+                counts.indexOf(
+                    Number(
+                        countSelect.value
+                    )
+                );
 
-            if (resultHeading) {
 
-                resultHeading.textContent =
-                    "READY TO GENERATE";
+            setCount(
+                counts[
+                    Math.max(
+                        0,
+                        index - 1
+                    )
+                ]
+            );
+
+        }
+    );
+
+
+    /* COUNT + */
+
+    plus?.addEventListener(
+        "click",
+        () => {
+
+            const index =
+                counts.indexOf(
+                    Number(
+                        countSelect.value
+                    )
+                );
+
+
+            setCount(
+                counts[
+                    Math.min(
+                        counts.length - 1,
+                        index + 1
+                    )
+                ]
+            );
+
+        }
+    );
+
+
+    /* GENERATE */
+
+    generateButton?.addEventListener(
+        "click",
+        generate
+    );
+
+
+    /* CTRL + ENTER */
+
+    situation?.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                (event.ctrlKey ||
+                 event.metaKey) &&
+                event.key === "Enter"
+            ) {
+
+                event.preventDefault();
+
+                generate();
+
             }
 
         }
     );
+
+
+    setCount(5);
 
 })();
