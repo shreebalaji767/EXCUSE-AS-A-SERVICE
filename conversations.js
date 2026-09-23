@@ -1,231 +1,260 @@
-/* =========================================================
-   EXCUSE-AS-A-SERVICE
-   SMS CONVERSATIONS
-   COMPLETE conversations.js
-========================================================= */
-
 (() => {
+
     "use strict";
 
-    const DATA = window.EXCUSE_DATA || {};
-    const conversations = Array.isArray(DATA.conversations)
-        ? DATA.conversations
-        : [];
 
-    const countSelect =
-        document.getElementById("conversationCount");
+    const DATA =
+        window.EXCUSE_DATA || {};
 
-    const generateButton =
-        document.getElementById("generateConversations");
 
-    const generateMoreButton =
-        document.getElementById("generateMore");
+    const conversations =
+        Array.isArray(DATA.conversations)
+            ? DATA.conversations
+            : [];
+
+
+    const select =
+        document.getElementById(
+            "conversationCount"
+        );
+
+
+    const countValue =
+        document.getElementById(
+            "countValue"
+        );
+
+
+    const countDisplay =
+        document.getElementById(
+            "countDisplay"
+        );
+
+
+    const minus =
+        document.getElementById(
+            "countMinus"
+        );
+
+
+    const plus =
+        document.getElementById(
+            "countPlus"
+        );
+
+
+    const generate =
+        document.getElementById(
+            "generateConversations"
+        );
+
+
+    const more =
+        document.getElementById(
+            "generateMore"
+        );
+
 
     const container =
-        document.getElementById("conversationContainer");
-
-    const resultHeading =
-        document.getElementById("resultHeading");
-
-
-    /* =====================================================
-       STATE
-    ===================================================== */
-
-    const usedIndexes = new Set();
+        document.getElementById(
+            "conversationContainer"
+        );
 
 
-    /* =====================================================
-       ESCAPE HTML
-    ===================================================== */
+    const heading =
+        document.getElementById(
+            "resultHeading"
+        );
+
+
+    const resultCount =
+        document.getElementById(
+            "resultCount"
+        );
+
+
+    const counts =
+        [
+            1,
+            3,
+            5,
+            10,
+            20,
+            50
+        ];
+
+
+    let used =
+        new Set();
+
+
+    /* ESCAPE */
 
     function escapeHTML(value) {
+
         return String(value ?? "")
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
+            .replace(
+                /[&<>"']/g,
+                character => {
+
+                    const map = {
+
+                        "&": "&amp;",
+                        "<": "&lt;",
+                        ">": "&gt;",
+                        '"': "&quot;",
+                        "'": "&#039;"
+
+                    };
+
+                    return map[character];
+
+                }
+            );
+
     }
 
 
-    /* =====================================================
-       RANDOM CONVERSATION
-    ===================================================== */
+    /* COUNT */
 
-    function getRandomConversation() {
+    function setCount(value) {
 
-        if (!conversations.length) {
+        let number =
+            Number(value);
+
+
+        if (
+            !counts.includes(
+                number
+            )
+        ) {
+
+            number = 5;
+
+        }
+
+
+        select.value =
+            String(number);
+
+
+        countValue.textContent =
+            number;
+
+
+        countDisplay.textContent =
+            number;
+
+    }
+
+
+    /* RANDOM */
+
+    function pickConversation() {
+
+        if (
+            !conversations.length
+        ) {
+
             return null;
+
         }
 
-        /*
-         * If every conversation has already been shown,
-         * start a new runtime cycle.
-         *
-         * No database.
-         * No localStorage.
-         * No permanent storage.
-         */
-        if (usedIndexes.size >= conversations.length) {
-            usedIndexes.clear();
+
+        if (
+            used.size >=
+            conversations.length
+        ) {
+
+            used.clear();
+
         }
+
 
         let index;
 
-        do {
-            index = Math.floor(
-                Math.random() * conversations.length
-            );
-        } while (usedIndexes.has(index));
 
-        usedIndexes.add(index);
+        do {
+
+            index =
+                Math.floor(
+                    Math.random() *
+                    conversations.length
+                );
+
+        }
+
+        while (
+            used.has(index)
+        );
+
+
+        used.add(index);
+
 
         return conversations[index];
+
     }
 
 
-    /* =====================================================
-       GET SPEAKER INFORMATION
-    ===================================================== */
+    /* TIME */
 
-    function getSpeakerInfo(messages) {
+    function getTime(index) {
 
-        const speakers = [];
-
-        messages.forEach((message) => {
-
-            const speaker =
-                String(
-                    message.speaker || "Unknown"
-                ).trim();
-
-            if (!speakers.includes(speaker)) {
-                speakers.push(speaker);
-            }
-        });
-
-        return speakers;
-    }
+        const total =
+            9 * 60 +
+            7 +
+            index * 7;
 
 
-    /* =====================================================
-       MESSAGE SIDE
-    ===================================================== */
-
-    function getMessageSide(
-        message,
-        speakers,
-        speakerMap
-    ) {
-
-        /*
-         * Preferred method:
-         *
-         * speakerId: 0
-         * speakerId: 1
-         */
-
-        if (
-            message.speakerId !== undefined &&
-            message.speakerId !== null
-        ) {
-
-            return Number(message.speakerId) === 0
-                ? "incoming"
-                : "outgoing";
-        }
+        const hour24 =
+            Math.floor(
+                total / 60
+            ) % 24;
 
 
-        /*
-         * If there are two different speakers,
-         * first speaker = left
-         * second speaker = right
-         */
-
-        const speaker =
-            String(
-                message.speaker || "Unknown"
-            ).trim();
-
-        if (speakers.length >= 2) {
-
-            if (speaker === speakers[0]) {
-                return "incoming";
-            }
-
-            if (speaker === speakers[1]) {
-                return "outgoing";
-            }
-        }
+        const minutes =
+            total % 60;
 
 
-        /*
-         * Fallback mapping.
-         */
+        const hour12 =
+            ((hour24 + 11) % 12) + 1;
 
-        if (!speakerMap.has(speaker)) {
-
-            const nextSide =
-                speakerMap.size % 2 === 0
-                    ? "incoming"
-                    : "outgoing";
-
-            speakerMap.set(
-                speaker,
-                nextSide
-            );
-        }
-
-        return speakerMap.get(speaker);
-    }
-
-
-    /* =====================================================
-       MESSAGE TIME
-    ===================================================== */
-
-    function generateTime(index) {
-
-        const hour =
-            9 + Math.floor(index / 3);
-
-        const minute =
-            (index * 7) % 60;
-
-        const h =
-            hour > 12
-                ? hour - 12
-                : hour;
 
         const suffix =
-            hour >= 12
+            hour24 >= 12
                 ? "PM"
                 : "AM";
 
-        return `${h}:${String(minute).padStart(2, "0")} ${suffix}`;
+
+        return (
+            hour12 +
+            ":" +
+            String(minutes)
+                .padStart(2, "0") +
+            " " +
+            suffix
+        );
+
     }
 
 
-    /* =====================================================
-       CONVERSATION CARD
-    ===================================================== */
+    /* CARD */
 
-    function createConversationCard(
+    function createCard(
         conversation,
         number
     ) {
 
-        const card =
-            document.createElement("article");
+        const article =
+            document.createElement(
+                "article"
+            );
 
-        card.className =
+
+        article.className =
             "conversation-card";
 
-
-        /* -------------------------------------------------
-           DATA
-        ------------------------------------------------- */
 
         const messages =
             Array.isArray(
@@ -236,82 +265,75 @@
 
 
         const speakers =
-            getSpeakerInfo(messages);
+            [
+                ...new Set(
+                    messages.map(
+                        message =>
+                            String(
+                                message.speaker ||
+                                "Unknown"
+                            )
+                    )
+                )
+            ];
 
-
-        const speakerMap =
-            new Map();
-
-
-        const firstSpeaker =
-            speakers[0] || "Unknown";
-
-
-        const secondSpeaker =
-            speakers[1] || "Chat";
-
-
-        const title =
-            conversation.title ||
-            `${firstSpeaker} & ${secondSpeaker}`;
-
-
-        const style =
-            conversation.style ||
-            "casual";
-
-
-        /* =================================================
-           HEADER
-        ================================================= */
 
         const header =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
+
 
         header.className =
             "conversation-header";
 
 
-        const avatar =
-            document.createElement("div");
+        header.innerHTML = `
 
-        avatar.className =
-            "conversation-avatar";
+            <div class="conversation-avatar">
+                👤
+            </div>
 
+            <div class="conversation-info">
 
-        const headerInfo =
-            document.createElement("div");
+                <h3>
+                    ${escapeHTML(
+                        conversation.title ||
+                        speakers.join(" & ") ||
+                        "Conversation"
+                    )}
+                </h3>
 
-        const heading =
-            document.createElement("h2");
+                <p>
+                    ● ONLINE
+                </p>
 
-        heading.textContent =
-            title;
+            </div>
 
+            <span class="conversation-style">
 
-        const small =
-            document.createElement("small");
+                ${escapeHTML(
+                    conversation.style ||
+                    "casual"
+                )}
 
-        small.textContent =
-            `#${number} · ${style}`;
+            </span>
 
+        `;
 
-        headerInfo.appendChild(heading);
-
-        header.appendChild(avatar);
-        header.appendChild(headerInfo);
-        header.appendChild(small);
-
-
-        /* =================================================
-           CHAT BODY
-        ================================================= */
 
         const dialogue =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
+
 
         dialogue.className =
             "conversation-dialogue";
+
+
+        const speakerIds =
+            new Map();
 
 
         messages.forEach(
@@ -321,139 +343,212 @@
                     String(
                         message.speaker ||
                         "Unknown"
-                    ).trim();
-
-
-                const text =
-                    String(
-                        message.text ||
-                        ""
-                    ).trim();
-
-
-                if (!text) {
-                    return;
-                }
-
-
-                const side =
-                    getMessageSide(
-                        message,
-                        speakers,
-                        speakerMap
                     );
 
 
-                const messageRow =
-                    document.createElement("div");
+                if (
+                    !speakerIds.has(
+                        speaker
+                    )
+                ) {
 
-                messageRow.className =
-                    `conversation-message ${side}`;
+                    speakerIds.set(
+                        speaker,
+                        speakerIds.size
+                    );
+
+                }
+
+
+                let side;
+
+
+                if (
+                    message.speakerId !==
+                    undefined
+                ) {
+
+                    side =
+                        Number(
+                            message.speakerId
+                        ) === 0
+                            ? "incoming"
+                            : "outgoing";
+
+                }
+
+                else {
+
+                    side =
+                        speakerIds.get(
+                            speaker
+                        ) % 2 === 0
+                            ? "incoming"
+                            : "outgoing";
+
+                }
+
+
+                const row =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                row.className =
+                    "conversation-message " +
+                    side;
 
 
                 const content =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
+
 
                 content.className =
                     "message-content";
 
 
                 const speakerElement =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
+
 
                 speakerElement.className =
                     "message-speaker";
+
 
                 speakerElement.textContent =
                     speaker;
 
 
                 const bubble =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
+
 
                 bubble.className =
                     "message-text";
 
-                bubble.textContent =
-                    text;
-
-
-                /*
-                 * Put SMS timestamp into the
-                 * CSS ::after content.
-                 */
 
                 bubble.setAttribute(
                     "data-time",
-                    generateTime(index)
+                    getTime(index)
                 );
 
 
-                /*
-                 * WhatsApp/SMS-like read status
-                 * on outgoing messages.
-                 */
+                bubble.textContent =
+                    String(
+                        message.text ||
+                        ""
+                    );
 
-                if (side === "outgoing") {
+
+                if (
+                    side ===
+                    "outgoing"
+                ) {
 
                     const check =
-                        document.createElement("span");
+                        document.createElement(
+                            "span"
+                        );
+
 
                     check.className =
                         "message-check";
 
+
                     check.textContent =
                         "✓✓";
 
-                    bubble.appendChild(check);
+
+                    bubble.appendChild(
+                        check
+                    );
+
                 }
 
 
-                content.appendChild(
-                    speakerElement
-                );
-
-                content.appendChild(
+                content.append(
+                    speakerElement,
                     bubble
                 );
 
-                messageRow.appendChild(
+
+                row.appendChild(
                     content
                 );
 
+
                 dialogue.appendChild(
-                    messageRow
+                    row
                 );
+
             }
         );
 
 
-        /* =================================================
-           SMS INPUT BAR
-        ================================================= */
+        /* ACTIONS */
 
         const actions =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
+
 
         actions.className =
             "conversation-actions";
 
 
+        const fakeInput =
+            document.createElement(
+                "div"
+            );
+
+
+        fakeInput.className =
+            "fake-input";
+
+
+        fakeInput.textContent =
+            "Message...";
+
+
         const copyButton =
-            document.createElement("button");
+            document.createElement(
+                "button"
+            );
+
 
         copyButton.type =
             "button";
+
+
+        copyButton.className =
+            "action-button";
+
 
         copyButton.textContent =
             "COPY";
 
 
         const screenshotButton =
-            document.createElement("button");
+            document.createElement(
+                "button"
+            );
+
 
         screenshotButton.type =
             "button";
+
+
+        screenshotButton.className =
+            "action-button";
+
 
         screenshotButton.textContent =
             "SCREENSHOT";
@@ -461,288 +556,232 @@
 
         copyButton.addEventListener(
             "click",
-            () => {
-                copyConversation(
-                    conversation
+            async () => {
+
+                const text =
+                    messages
+                        .map(
+                            message =>
+                                message.speaker +
+                                ": " +
+                                message.text
+                        )
+                        .join("\n");
+
+
+                try {
+
+                    await navigator
+                        .clipboard
+                        .writeText(text);
+
+                }
+
+                catch {
+
+                    /* Clipboard unavailable */
+
+                }
+
+
+                copyButton.textContent =
+                    "COPIED";
+
+
+                setTimeout(
+                    () => {
+
+                        copyButton.textContent =
+                            "COPY";
+
+                    },
+                    1000
                 );
+
             }
         );
 
 
         screenshotButton.addEventListener(
             "click",
-            () => {
-                screenshotConversation(
-                    card,
-                    number
-                );
+            async () => {
+
+                if (
+                    typeof html2canvas ===
+                    "undefined"
+                ) {
+
+                    alert(
+                        "Screenshot engine is unavailable."
+                    );
+
+                    return;
+
+                }
+
+
+                try {
+
+                    const canvas =
+                        await html2canvas(
+                            article,
+                            {
+
+                                backgroundColor:
+                                    "#0b0b0b",
+
+                                scale:
+                                    Math.min(
+                                        window.devicePixelRatio ||
+                                        1,
+                                        2
+                                    ),
+
+                                useCORS: true
+
+                            }
+                        );
+
+
+                    const link =
+                        document.createElement(
+                            "a"
+                        );
+
+
+                    link.download =
+                        "excuse-random-" +
+                        number +
+                        ".png";
+
+
+                    link.href =
+                        canvas.toDataURL(
+                            "image/png"
+                        );
+
+
+                    link.click();
+
+                }
+
+                catch (error) {
+
+                    console.error(
+                        error
+                    );
+
+                    alert(
+                        "Could not create screenshot."
+                    );
+
+                }
+
             }
         );
 
 
-        actions.appendChild(
-            copyButton
-        );
-
-        actions.appendChild(
+        actions.append(
+            fakeInput,
+            copyButton,
             screenshotButton
         );
 
 
-        /* =================================================
-           META
-        ================================================= */
+        /* META */
 
         const meta =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
+
 
         meta.className =
             "conversation-meta";
 
 
-        const metaLeft =
-            document.createElement("span");
+        meta.innerHTML = `
 
-        metaLeft.textContent =
-            `${messages.length} messages`;
+            <span>
+                ${messages.length} messages
+            </span>
 
+            <span>
+                RANDOM ARCHIVE
+            </span>
 
-        const metaRight =
-            document.createElement("span");
-
-        metaRight.textContent =
-            "ENCRYPTED WITH ABSOLUTELY NOTHING";
-
-
-        meta.appendChild(
-            metaLeft
-        );
-
-        meta.appendChild(
-            metaRight
-        );
+        `;
 
 
-        /* =================================================
-           BUILD CARD
-        ================================================= */
-
-        card.appendChild(
-            header
-        );
-
-        card.appendChild(
-            dialogue
-        );
-
-        card.appendChild(
-            actions
-        );
-
-        card.appendChild(
+        article.append(
+            header,
+            dialogue,
+            actions,
             meta
         );
 
 
-        return card;
+        return article;
+
     }
 
 
-    /* =====================================================
-       COPY
-    ===================================================== */
+    /* RENDER */
 
-    async function copyConversation(
-        conversation
-    ) {
+    function render() {
 
-        const messages =
-            Array.isArray(
-                conversation.messages
-            )
-                ? conversation.messages
-                : [];
-
-
-        const text =
-            messages
-                .map(
-                    message =>
-                        `${message.speaker}: ${message.text}`
-                )
-                .join("\n");
-
-
-        try {
-
-            await navigator.clipboard.writeText(
-                text
-            );
-
-        } catch {
-
-            const textarea =
-                document.createElement("textarea");
-
-            textarea.value =
-                text;
-
-            document.body.appendChild(
-                textarea
-            );
-
-            textarea.select();
-
-            document.execCommand(
-                "copy"
-            );
-
-            textarea.remove();
-        }
-    }
-
-
-    /* =====================================================
-       SCREENSHOT
-    ===================================================== */
-
-    async function screenshotConversation(
-        element,
-        number
-    ) {
-
-        /*
-         * Uses html2canvas if available.
-         * If it isn't available, inform the user.
-         */
-
-        if (
-            typeof html2canvas ===
-            "undefined"
-        ) {
-
-            alert(
-                "Screenshot engine is not loaded. Add html2canvas to enable screenshots."
-            );
-
-            return;
-        }
-
-
-        try {
-
-            const canvas =
-                await html2canvas(
-                    element,
-                    {
-                        backgroundColor:
-                            "#0c0c0c",
-
-                        scale:
-                            Math.min(
-                                window.devicePixelRatio || 1,
-                                2
-                            ),
-
-                        useCORS:
-                            true
-                    }
-                );
-
-
-            const link =
-                document.createElement("a");
-
-
-            link.download =
-                `excuse-conversation-${number}.png`;
-
-
-            link.href =
-                canvas.toDataURL(
-                    "image/png"
-                );
-
-
-            link.click();
-
-        } catch (error) {
-
-            console.error(
-                "Screenshot failed:",
-                error
-            );
-
-            alert(
-                "Could not create screenshot."
-            );
-        }
-    }
-
-
-    /* =====================================================
-       GENERATE
-    ===================================================== */
-
-    function generateConversations() {
-
-        if (!container) {
-            return;
-        }
-
-
-        let amount =
+        const amount =
             Number(
-                countSelect
-                    ? countSelect.value
-                    : 5
-            );
-
-
-        if (!Number.isFinite(amount)) {
-            amount = 5;
-        }
-
-
-        amount =
-            Math.max(
-                1,
-                Math.min(
-                    amount,
-                    50
-                )
-            );
+                select.value
+            ) || 5;
 
 
         container.innerHTML =
             "";
 
 
+        heading.textContent =
+            amount +
+            " RANDOM CONVERSATION" +
+            (
+                amount === 1
+                    ? ""
+                    : "S"
+            );
+
+
+        resultCount.textContent =
+            amount;
+
+
         if (
-            resultHeading
+            !conversations.length
         ) {
 
-            resultHeading.textContent =
-                `${amount} RANDOM CONVERSATION${
-                    amount === 1
-                        ? ""
-                        : "S"
-                }`;
-        }
-
-
-        if (!conversations.length) {
-
             container.innerHTML = `
+
                 <div class="empty-state">
-                    <h2>NO CONVERSATIONS FOUND</h2>
+
+                    <div>
+                        ⚠️
+                    </div>
+
+                    <h3>
+                        No conversations found.
+                    </h3>
+
                     <p>
-                        Run build/generate.py first.
+                        Run
+                        python build/generate.py
+                        first.
                     </p>
+
                 </div>
+
             `;
 
             return;
+
         }
 
 
@@ -753,61 +792,101 @@
         ) {
 
             const conversation =
-                getRandomConversation();
+                pickConversation();
 
 
-            if (!conversation) {
-                break;
+            if (
+                conversation
+            ) {
+
+                container.appendChild(
+                    createCard(
+                        conversation,
+                        i + 1
+                    )
+                );
+
             }
 
+        }
 
-            const card =
-                createConversationCard(
-                    conversation,
-                    i + 1
+    }
+
+
+    /* MINUS */
+
+    minus?.addEventListener(
+        "click",
+        () => {
+
+            const index =
+                counts.indexOf(
+                    Number(
+                        select.value
+                    )
                 );
 
 
-            container.appendChild(
-                card
+            setCount(
+                counts[
+                    Math.max(
+                        0,
+                        index - 1
+                    )
+                ]
             );
-        }
-    }
-
-
-    /* =====================================================
-       EVENTS
-    ===================================================== */
-
-    if (generateButton) {
-
-        generateButton.addEventListener(
-            "click",
-            generateConversations
-        );
-    }
-
-
-    if (generateMoreButton) {
-
-        generateMoreButton.addEventListener(
-            "click",
-            generateConversations
-        );
-    }
-
-
-    /* =====================================================
-       START
-    ===================================================== */
-
-    document.addEventListener(
-        "DOMContentLoaded",
-        () => {
-
-            generateConversations();
 
         }
     );
+
+
+    /* PLUS */
+
+    plus?.addEventListener(
+        "click",
+        () => {
+
+            const index =
+                counts.indexOf(
+                    Number(
+                        select.value
+                    )
+                );
+
+
+            setCount(
+                counts[
+                    Math.min(
+                        counts.length - 1,
+                        index + 1
+                    )
+                ]
+            );
+
+        }
+    );
+
+
+    /* GENERATE */
+
+    generate?.addEventListener(
+        "click",
+        render
+    );
+
+
+    /* MORE */
+
+    more?.addEventListener(
+        "click",
+        render
+    );
+
+
+    /* INITIAL */
+
+    setCount(5);
+
+    render();
 
 })();
