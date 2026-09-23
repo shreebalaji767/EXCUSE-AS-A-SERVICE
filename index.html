@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excuse-as-a-Service</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="topbar">
+    <a href="index.html" class="logo">☠️ EXCUSE-AS-A-SERVICE</a>
+
+    <nav>
+        <a href="index.html">Ask</a>
+        <a href="conversations.html">Conversations</a>
+    </nav>
+</header>
+
+<main class="container">
+
+    <section class="hero">
+        <div class="skull">☠️</div>
+
+        <h1>ASK ANYTHING.</h1>
+        <h2>GET AN EXCUSE.</h2>
+
+        <p>
+            Believable. Idiotic. Sarcastic. Dark.
+            Completely unnecessary.
+        </p>
+    </section>
+
+    <section class="generator-card">
+
+        <label for="question">What happened?</label>
+
+        <textarea
+            id="question"
+            placeholder="Why didn't you reply to my message?"
+        ></textarea>
+
+        <div class="controls">
+
+            <div>
+                <label for="style">Style</label>
+
+                <select id="style">
+                    <option value="believable">Believable</option>
+                    <option value="professional">Professional</option>
+                    <option value="casual">Casual</option>
+                    <option value="sarcastic">Sarcastic</option>
+                    <option value="idiotic">Idiotic</option>
+                    <option value="dark">Dark Humor</option>
+                    <option value="absurd">Absurd</option>
+                    <option value="corporate">Corporate</option>
+                    <option value="dramatic">Dramatic</option>
+                    <option value="passive-aggressive">Passive Aggressive</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="amount">Conversations</label>
+
+                <select id="amount">
+                    <option value="1">1</option>
+                    <option value="3">3</option>
+                    <option value="5" selected>5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                </select>
+            </div>
+
+        </div>
+
+        <button id="generate" class="primary-button">
+            GENERATE
+        </button>
+
+    </section>
+
+    <section id="result" class="results"></section>
+
+</main>
+
+<footer>
+    EXCUSE-AS-A-SERVICE · No accounts. No tracking. No database.
+</footer>
+
+<script src="data/content.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
