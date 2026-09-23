@@ -2,94 +2,327 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Excuse-as-a-Service</title>
-    <link rel="stylesheet" href="style.css">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="EXCUSE-AS-A-SERVICE — Ask anything. Get an excuse."
+    >
+
+    <meta
+        name="theme-color"
+        content="#070707"
+    >
+
+    <title>EXCUSE-AS-A-SERVICE</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 </head>
 
 <body>
 
-<header class="topbar">
-    <a href="index.html" class="logo">☠️ EXCUSE-AS-A-SERVICE</a>
+    <!-- =====================================================
+         TOP NAVIGATION
+    ====================================================== -->
 
-    <nav>
-        <a href="index.html">Ask</a>
-        <a href="conversations.html">Conversations</a>
-    </nav>
-</header>
+    <header class="topbar">
 
-<main class="container">
+        <a
+            href="index.html"
+            class="logo"
+            aria-label="EXCUSE-AS-A-SERVICE Home"
+        >
+            ☠️ EXCUSE-AS-A-SERVICE
+        </a>
 
-    <section class="hero">
-        <div class="skull">☠️</div>
+        <nav aria-label="Main navigation">
 
-        <h1>ASK ANYTHING.</h1>
-        <h2>GET AN EXCUSE.</h2>
+            <a
+                href="index.html"
+                class="active"
+            >
+                Ask
+            </a>
 
-        <p>
-            Believable. Idiotic. Sarcastic. Dark.
-            Completely unnecessary.
-        </p>
-    </section>
+            <a
+                href="conversations.html"
+            >
+                Conversations
+            </a>
 
-    <section class="generator-card">
+        </nav>
 
-        <label for="question">What happened?</label>
+    </header>
 
-        <textarea
-            id="question"
-            placeholder="Why didn't you reply to my message?"
-        ></textarea>
 
-        <div class="controls">
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
 
-            <div>
-                <label for="style">Style</label>
+    <main class="container">
 
-                <select id="style">
-                    <option value="believable">Believable</option>
-                    <option value="professional">Professional</option>
-                    <option value="casual">Casual</option>
-                    <option value="sarcastic">Sarcastic</option>
-                    <option value="idiotic">Idiotic</option>
-                    <option value="dark">Dark Humor</option>
-                    <option value="absurd">Absurd</option>
-                    <option value="corporate">Corporate</option>
-                    <option value="dramatic">Dramatic</option>
-                    <option value="passive-aggressive">Passive Aggressive</option>
-                </select>
+        <!-- =================================================
+             HERO
+        ================================================== -->
+
+        <section class="hero">
+
+            <div
+                class="skull"
+                aria-hidden="true"
+            >
+                ☠️
             </div>
 
-            <div>
-                <label for="amount">Conversations</label>
+            <h1>
+                ASK ANYTHING.
+                <br>
+                GET AN EXCUSE.
+            </h1>
 
-                <select id="amount">
-                    <option value="1">1</option>
-                    <option value="3">3</option>
-                    <option value="5" selected>5</option>
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                </select>
+            <p>
+                Believable. Idiotic. Sarcastic. Dark.
+                Completely unnecessary.
+            </p>
+
+        </section>
+
+
+        <!-- =================================================
+             GENERATOR
+        ================================================== -->
+
+        <section
+            class="generator-controls"
+            aria-label="Excuse generator"
+        >
+
+            <!-- =============================================
+                 WHAT HAPPENED
+            ============================================== -->
+
+            <div class="control-group">
+
+                <label for="situation">
+                    WHAT HAPPENED?
+                </label>
+
+                <textarea
+                    id="situation"
+                    name="situation"
+                    rows="5"
+                    maxlength="2000"
+                    placeholder="I missed an important meeting because..."
+                    autocomplete="off"
+                    spellcheck="true"
+                ></textarea>
+
             </div>
 
-        </div>
 
-        <button id="generate" class="primary-button">
-            GENERATE
-        </button>
+            <!-- =============================================
+                 STYLE
+            ============================================== -->
 
-    </section>
+            <div class="control-group">
 
-    <section id="result" class="results"></section>
+                <label for="style">
+                    STYLE
+                </label>
 
-</main>
+                <select
+                    id="style"
+                    name="style"
+                >
 
-<footer>
-    EXCUSE-AS-A-SERVICE · No accounts. No tracking. No database.
-</footer>
+                    <option value="believable">
+                        Believable
+                    </option>
 
-<script src="data/content.js"></script>
-<script src="app.js"></script>
+                    <option value="professional">
+                        Professional
+                    </option>
+
+                    <option value="casual">
+                        Casual
+                    </option>
+
+                    <option value="sarcastic">
+                        Sarcastic
+                    </option>
+
+                    <option value="idiotic">
+                        Idiotic
+                    </option>
+
+                    <option value="dark humor">
+                        Dark Humor
+                    </option>
+
+                    <option value="absurd">
+                        Absurd
+                    </option>
+
+                    <option value="corporate">
+                        Corporate
+                    </option>
+
+                    <option value="dramatic">
+                        Dramatic
+                    </option>
+
+                    <option value="passive-aggressive">
+                        Passive Aggressive
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- =============================================
+                 NUMBER OF CONVERSATIONS
+            ============================================== -->
+
+            <div class="control-group">
+
+                <label for="conversationCount">
+                    CONVERSATIONS
+                </label>
+
+                <select
+                    id="conversationCount"
+                    name="conversationCount"
+                >
+
+                    <option value="1">
+                        1
+                    </option>
+
+                    <option value="3">
+                        3
+                    </option>
+
+                    <option
+                        value="5"
+                        selected
+                    >
+                        5
+                    </option>
+
+                    <option value="10">
+                        10
+                    </option>
+
+                    <option value="20">
+                        20
+                    </option>
+
+                    <option value="50">
+                        50
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- =============================================
+                 GENERATE
+            ============================================== -->
+
+            <button
+                id="generateButton"
+                class="primary-button"
+                type="button"
+            >
+                ☠️ GENERATE
+            </button>
+
+        </section>
+
+
+        <!-- =================================================
+             RESULTS
+        ================================================== -->
+
+        <section
+            class="results"
+            aria-live="polite"
+            aria-atomic="false"
+        >
+
+            <div
+                class="section-heading"
+                id="resultHeading"
+            >
+                GENERATED EXCUSES
+            </div>
+
+
+            <!--
+                app.js inserts generated conversations here.
+            -->
+
+            <div
+                id="results"
+            ></div>
+
+
+            <!--
+                Compatibility container.
+
+                If your existing app.js uses
+                #resultContainer instead of #results,
+                it can still be supported by the JS.
+            -->
+
+            <div
+                id="resultContainer"
+            ></div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer>
+        EXCUSE-AS-A-SERVICE · NO ACCOUNTS · NO TRACKING · NO DATABASE
+    </footer>
+
+
+    <!-- =====================================================
+         DATA
+    ====================================================== -->
+
+    <script src="data/content.js"></script>
+
+
+    <!-- =====================================================
+         SCREENSHOT ENGINE
+    ====================================================== -->
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"
+    ></script>
+
+
+    <!-- =====================================================
+         MAIN APPLICATION
+    ====================================================== -->
+
+    <script src="app.js"></script>
 
 </body>
 </html>
