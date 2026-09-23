@@ -1,4 +1,12 @@
-* {
+/* =========================================================
+   EXCUSE-AS-A-SERVICE
+   RESPONSIVE GLOBAL CSS
+   Mobile + Tablet + Laptop + Desktop + 4K
+========================================================= */
+
+*,
+*::before,
+*::after {
     box-sizing: border-box;
 }
 
@@ -7,35 +15,81 @@
     --card: #111111;
     --card2: #171717;
     --border: #292929;
+
     --text: #f5f5f5;
     --muted: #8c8c8c;
+
     --accent: #ffffff;
+
+    --radius-small: 10px;
+    --radius-medium: 16px;
+    --radius-large: 24px;
+    --radius-xl: 28px;
+
+    --content-width: 1100px;
+
+    --page-padding: clamp(
+        14px,
+        4vw,
+        40px
+    );
 }
+
+/* =========================================================
+   BASE
+========================================================= */
 
 html {
     scroll-behavior: smooth;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 body {
     margin: 0;
+
+    width: 100%;
+    min-height: 100vh;
+
+    overflow-x: hidden;
+
     background:
         radial-gradient(
             circle at top,
             #202020 0,
             #090909 45%
         );
+
     color: var(--text);
+
     font-family:
         Arial,
         Helvetica,
         sans-serif;
-    min-height: 100vh;
+
+    line-height: 1.5;
+
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
 }
+
+/* Prevent media from overflowing */
+
+img,
+video,
+canvas,
+svg {
+    max-width: 100%;
+}
+
+/* Forms */
 
 button,
 textarea,
-select {
+select,
+input {
     font: inherit;
+    max-width: 100%;
 }
 
 button,
@@ -43,109 +97,236 @@ select {
     cursor: pointer;
 }
 
+button {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* =========================================================
+   TOPBAR
+========================================================= */
+
 .topbar {
     position: sticky;
+
     top: 0;
+
     z-index: 100;
 
+    width: 100%;
+
     display: flex;
+
     justify-content: space-between;
+
     align-items: center;
 
-    padding: 18px 5%;
+    gap: 20px;
 
-    background: rgba(
-        9,
-        9,
-        9,
-        .92
-    );
+    padding:
+        16px
+        var(--page-padding);
+
+    background:
+        rgba(
+            9,
+            9,
+            9,
+            .92
+        );
 
     backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
 
     border-bottom:
         1px solid var(--border);
 }
 
+/* =========================================================
+   LOGO
+========================================================= */
+
 .logo {
     color: white;
+
     text-decoration: none;
+
     font-weight: 900;
+
     letter-spacing: -1px;
+
+    white-space: nowrap;
+
+    transition:
+        opacity .15s ease;
 }
+
+.logo:hover {
+    opacity: .75;
+}
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
 
 nav {
     display: flex;
-    gap: 25px;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap:
+        clamp(
+            12px,
+            2.5vw,
+            25px
+        );
+
+    flex-wrap: wrap;
 }
 
 nav a {
     color: var(--muted);
+
     text-decoration: none;
+
     font-weight: 700;
+
+    white-space: nowrap;
+
+    transition:
+        color .15s ease;
 }
 
-nav a:hover {
+nav a:hover,
+nav a:focus {
     color: white;
 }
 
-.container {
-    width: min(
-        1050px,
-        92%
-    );
+/* =========================================================
+   MAIN CONTAINER
+========================================================= */
 
-    margin: auto;
+.container {
+    width:
+        min(
+            var(--content-width),
+            calc(100% - 2 * var(--page-padding))
+        );
+
+    margin:
+        0 auto;
 
     padding:
-        70px 0
-        100px;
+        clamp(45px, 7vw, 80px)
+        0
+        clamp(60px, 9vw, 110px);
 }
 
+/* =========================================================
+   HERO
+========================================================= */
+
 .hero {
+    width: 100%;
+
     text-align: center;
-    margin-bottom: 55px;
+
+    margin-bottom:
+        clamp(
+            35px,
+            6vw,
+            60px
+        );
 }
 
 .skull {
-    font-size: 70px;
+    font-size:
+        clamp(
+            45px,
+            8vw,
+            70px
+        );
+
+    line-height: 1;
+
     margin-bottom: 15px;
 }
 
 .hero h1 {
     margin: 0;
+
+    max-width: 100%;
+
     font-size:
         clamp(
-            38px,
+            36px,
             8vw,
             85px
         );
 
+    line-height: .95;
+
     font-weight: 1000;
-    letter-spacing: -5px;
+
+    letter-spacing:
+        clamp(
+            -5px,
+            -.4vw,
+            -2px
+        );
+
+    overflow-wrap: anywhere;
 }
 
 .hero h2 {
-    margin: 5px 0 20px;
+    margin:
+        8px 0 20px;
 
     font-size:
         clamp(
-            28px,
+            25px,
             5vw,
             55px
         );
 
+    line-height: 1;
+
     color: #777;
 
-    letter-spacing: -3px;
+    letter-spacing:
+        clamp(
+            -3px,
+            -.25vw,
+            -1px
+        );
+
+    overflow-wrap: anywhere;
 }
 
 .hero p {
+    max-width: 700px;
+
+    margin:
+        0 auto;
+
     color: var(--muted);
-    font-size: 18px;
+
+    font-size:
+        clamp(
+            15px,
+            2vw,
+            18px
+        );
 }
 
+/* =========================================================
+   GENERATOR CARD
+========================================================= */
+
 .generator-card {
+    width: 100%;
+
     background:
         linear-gradient(
             145deg,
@@ -156,25 +337,49 @@ nav a:hover {
     border:
         1px solid var(--border);
 
-    border-radius: 28px;
+    border-radius:
+        var(--radius-xl);
 
-    padding: 30px;
+    padding:
+        clamp(
+            18px,
+            4vw,
+            30px
+        );
 
     box-shadow:
         0 25px 80px
-        rgba(0,0,0,.35);
+        rgba(
+            0,
+            0,
+            0,
+            .35
+        );
 }
 
 .generator-card > label {
     display: block;
+
     margin-bottom: 12px;
 
     font-weight: 800;
 }
 
+/* =========================================================
+   TEXTAREA
+========================================================= */
+
 textarea {
+    display: block;
+
     width: 100%;
-    min-height: 150px;
+
+    min-height:
+        clamp(
+            130px,
+            20vw,
+            180px
+        );
 
     resize: vertical;
 
@@ -185,26 +390,73 @@ textarea {
     border:
         1px solid #333;
 
-    border-radius: 18px;
+    border-radius:
+        var(--radius-medium);
 
-    padding: 20px;
+    padding:
+        clamp(
+            14px,
+            3vw,
+            20px
+        );
 
     outline: none;
+
+    line-height: 1.6;
+
+    overflow-wrap: anywhere;
+
+    transition:
+        border-color .15s ease,
+        box-shadow .15s ease;
+}
+
+textarea::placeholder {
+    color: #666;
 }
 
 textarea:focus {
     border-color: #777;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(
+            255,
+            255,
+            255,
+            .04
+        );
 }
+
+/* =========================================================
+   CONTROLS
+========================================================= */
 
 .controls {
     display: grid;
 
     grid-template-columns:
-        1fr 1fr;
+        repeat(
+            2,
+            minmax(
+                0,
+                1fr
+            )
+        );
 
-    gap: 20px;
+    gap:
+        clamp(
+            12px,
+            2vw,
+            20px
+        );
 
-    margin: 25px 0;
+    margin:
+        25px 0;
+}
+
+.controls > div {
+    min-width: 0;
 }
 
 .controls label {
@@ -221,8 +473,16 @@ textarea:focus {
     text-transform: uppercase;
 }
 
+/* =========================================================
+   SELECT
+========================================================= */
+
 select {
+    display: block;
+
     width: 100%;
+
+    min-height: 50px;
 
     background: #080808;
 
@@ -231,20 +491,41 @@ select {
     border:
         1px solid #333;
 
-    border-radius: 14px;
+    border-radius:
+        var(--radius-small);
 
-    padding: 15px;
+    padding:
+        12px 14px;
+
+    outline: none;
+
+    transition:
+        border-color .15s ease;
 }
+
+select:focus {
+    border-color: #777;
+}
+
+/* =========================================================
+   PRIMARY BUTTON
+========================================================= */
 
 .primary-button,
 .share-all {
+    display: block;
+
     width: 100%;
 
-    padding: 18px;
+    min-height: 52px;
+
+    padding:
+        14px 18px;
 
     border: 0;
 
-    border-radius: 15px;
+    border-radius:
+        15px;
 
     background: white;
 
@@ -252,20 +533,45 @@ select {
 
     font-weight: 1000;
 
+    text-align: center;
+
     transition:
-        transform .15s,
-        opacity .15s;
+        transform .15s ease,
+        opacity .15s ease;
 }
 
 .primary-button:hover,
 .share-all:hover {
-    transform: translateY(-2px);
+    transform:
+        translateY(-2px);
+
     opacity: .9;
 }
 
-.results {
-    margin-top: 50px;
+.primary-button:active,
+.share-all:active {
+    transform:
+        translateY(0);
 }
+
+/* =========================================================
+   RESULTS
+========================================================= */
+
+.results {
+    width: 100%;
+
+    margin-top:
+        clamp(
+            35px,
+            6vw,
+            50px
+        );
+}
+
+/* =========================================================
+   SECTION HEADING
+========================================================= */
 
 .section-heading {
     font-size: 14px;
@@ -278,10 +584,18 @@ select {
 
     margin:
         50px 0 20px;
+
+    overflow-wrap: anywhere;
 }
+
+/* =========================================================
+   CARDS
+========================================================= */
 
 .excuse-card,
 .conversation-card {
+    width: 100%;
+
     background:
         linear-gradient(
             145deg,
@@ -292,12 +606,24 @@ select {
     border:
         1px solid var(--border);
 
-    border-radius: 24px;
+    border-radius:
+        var(--radius-large);
 
-    padding: 25px;
+    padding:
+        clamp(
+            17px,
+            3vw,
+            25px
+        );
 
     margin-bottom: 20px;
+
+    overflow: hidden;
 }
+
+/* =========================================================
+   RESULT LABEL
+========================================================= */
 
 .result-label {
     color: #777;
@@ -309,15 +635,34 @@ select {
     font-weight: 900;
 
     margin-bottom: 15px;
+
+    overflow-wrap: anywhere;
 }
 
+/* =========================================================
+   EXCUSE TEXT
+========================================================= */
+
 .excuse-card h3 {
-    font-size: 25px;
+    font-size:
+        clamp(
+            19px,
+            3vw,
+            25px
+        );
 
     line-height: 1.5;
 
     margin: 0;
+
+    overflow-wrap: anywhere;
+
+    word-break: break-word;
 }
+
+/* =========================================================
+   CONVERSATION HEADER
+========================================================= */
 
 .conversation-header {
     display: flex;
@@ -331,9 +676,23 @@ select {
     margin-bottom: 25px;
 
     font-weight: 900;
+
+    min-width: 0;
 }
 
+.conversation-header > * {
+    min-width: 0;
+}
+
+/* =========================================================
+   BADGE
+========================================================= */
+
 .badge {
+    display: inline-block;
+
+    max-width: 100%;
+
     padding:
         7px 11px;
 
@@ -347,10 +706,20 @@ select {
     font-size: 11px;
 
     text-transform: uppercase;
+
+    overflow-wrap: anywhere;
 }
 
+/* =========================================================
+   MESSAGE
+========================================================= */
+
 .message {
+    width: 100%;
+
     margin-bottom: 24px;
+
+    min-width: 0;
 }
 
 .speaker {
@@ -363,9 +732,13 @@ select {
     text-transform: uppercase;
 
     margin-bottom: 7px;
+
+    overflow-wrap: anywhere;
 }
 
 .bubble {
+    width: 100%;
+
     background: #1c1c1c;
 
     border:
@@ -373,10 +746,19 @@ select {
 
     border-radius: 16px;
 
-    padding: 15px 18px;
+    padding:
+        14px 18px;
 
     line-height: 1.6;
+
+    overflow-wrap: anywhere;
+
+    word-break: break-word;
 }
+
+/* =========================================================
+   CONVERSATION ACTIONS
+========================================================= */
 
 .conversation-actions {
     display: flex;
@@ -386,9 +768,13 @@ select {
     gap: 10px;
 
     margin-top: 20px;
+
+    width: 100%;
 }
 
 .conversation-actions button {
+    min-height: 42px;
+
     background: #1c1c1c;
 
     color: white;
@@ -396,7 +782,8 @@ select {
     border:
         1px solid #333;
 
-    border-radius: 10px;
+    border-radius:
+        var(--radius-small);
 
     padding:
         10px 15px;
@@ -404,17 +791,34 @@ select {
     font-size: 12px;
 
     font-weight: 900;
+
+    transition:
+        background .15s ease,
+        transform .15s ease;
 }
 
 .conversation-actions button:hover {
     background: #292929;
+
+    transform:
+        translateY(-1px);
 }
+
+/* =========================================================
+   SHARE ALL
+========================================================= */
 
 .share-all {
     margin-top: 20px;
 }
 
+/* =========================================================
+   FOOTER
+========================================================= */
+
 footer {
+    width: 100%;
+
     border-top:
         1px solid var(--border);
 
@@ -422,30 +826,395 @@ footer {
 
     color: #555;
 
-    padding: 30px;
+    padding:
+        25px
+        var(--page-padding);
 
     font-size: 12px;
 
     letter-spacing: 1px;
+
+    overflow-wrap: anywhere;
 }
+
+/* =========================================================
+   TABLETS
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .topbar {
+        padding:
+            15px
+            var(--page-padding);
+    }
+
+    .container {
+        padding-top: 55px;
+    }
+
+    .controls {
+        grid-template-columns:
+            1fr 1fr;
+    }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
 
 @media (max-width: 700px) {
 
     .topbar {
+        position: sticky;
+
         flex-direction: column;
-        gap: 15px;
+
+        justify-content: center;
+
+        gap: 12px;
+
+        padding:
+            14px
+            12px;
     }
 
-    .controls {
-        grid-template-columns: 1fr;
+    nav {
+        width: 100%;
+
+        gap:
+            10px 18px;
+
+        justify-content: center;
+    }
+
+    nav a {
+        font-size: 14px;
+    }
+
+    .container {
+        width:
+            calc(
+                100% - 24px
+            );
+
+        padding:
+            40px 0
+            70px;
+    }
+
+    .hero {
+        margin-bottom: 35px;
     }
 
     .hero h1 {
         letter-spacing: -3px;
     }
 
-    .generator-card {
-        padding: 20px;
+    .hero h2 {
+        letter-spacing: -2px;
     }
 
+    .generator-card {
+        padding: 18px;
+
+        border-radius: 20px;
+    }
+
+    .controls {
+        grid-template-columns:
+            1fr;
+
+        gap: 14px;
+    }
+
+    textarea {
+        min-height: 140px;
+    }
+
+    .conversation-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 10px;
+    }
+
+    .conversation-actions {
+        display: grid;
+
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+    .conversation-actions button {
+        width: 100%;
+    }
+
+    .excuse-card,
+    .conversation-card {
+        border-radius: 20px;
+    }
+}
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .container {
+        width:
+            calc(
+                100% - 18px
+            );
+
+        padding-top: 32px;
+    }
+
+    .logo {
+        font-size: 14px;
+    }
+
+    nav {
+        gap:
+            8px 13px;
+    }
+
+    nav a {
+        font-size: 12px;
+    }
+
+    .skull {
+        font-size: 48px;
+    }
+
+    .hero h1 {
+        font-size:
+            clamp(
+                32px,
+                12vw,
+                50px
+            );
+
+        letter-spacing: -2px;
+    }
+
+    .hero h2 {
+        font-size:
+            clamp(
+                23px,
+                8vw,
+                35px
+            );
+
+        letter-spacing: -1.5px;
+    }
+
+    .hero p {
+        font-size: 14px;
+    }
+
+    .generator-card {
+        padding: 15px;
+
+        border-radius: 18px;
+    }
+
+    textarea {
+        padding: 14px;
+
+        border-radius: 14px;
+    }
+
+    select {
+        min-height: 48px;
+    }
+
+    .excuse-card,
+    .conversation-card {
+        padding: 15px;
+
+        border-radius: 17px;
+    }
+
+    .bubble {
+        padding:
+            13px 14px;
+
+        border-radius: 14px;
+    }
+
+    .conversation-actions {
+        grid-template-columns:
+            1fr;
+    }
+
+    .conversation-actions button {
+        min-height: 44px;
+    }
+}
+
+/* =========================================================
+   VERY SMALL PHONES
+   320px - 360px
+========================================================= */
+
+@media (max-width: 360px) {
+
+    .container {
+        width:
+            calc(
+                100% - 12px
+            );
+    }
+
+    .topbar {
+        padding:
+            12px 8px;
+    }
+
+    nav {
+        gap:
+            6px 10px;
+    }
+
+    nav a {
+        font-size: 11px;
+    }
+
+    .generator-card {
+        padding: 12px;
+    }
+
+    .hero h1 {
+        font-size: 30px;
+
+        letter-spacing: -1.5px;
+    }
+
+    .hero h2 {
+        font-size: 22px;
+    }
+
+    .excuse-card,
+    .conversation-card {
+        padding: 12px;
+    }
+
+    .bubble {
+        font-size: 14px;
+    }
+}
+
+/* =========================================================
+   LANDSCAPE PHONES
+========================================================= */
+
+@media (
+    max-width: 900px
+) and (
+    orientation: landscape
+) {
+
+    .topbar {
+        flex-direction: row;
+
+        justify-content:
+            space-between;
+    }
+
+    nav {
+        width: auto;
+    }
+
+    .container {
+        padding-top: 30px;
+    }
+
+    .hero {
+        margin-bottom: 30px;
+    }
+
+    .skull {
+        font-size: 45px;
+    }
+}
+
+/* =========================================================
+   TOUCH DEVICES
+========================================================= */
+
+@media (hover: none) {
+
+    .primary-button:hover,
+    .share-all:hover,
+    .conversation-actions button:hover {
+        transform: none;
+    }
+
+    button,
+    select {
+        min-height: 44px;
+    }
+}
+
+/* =========================================================
+   LARGE DESKTOP
+========================================================= */
+
+@media (min-width: 1600px) {
+
+    :root {
+        --content-width: 1200px;
+    }
+
+    .container {
+        padding-top: 90px;
+    }
+}
+
+/* =========================================================
+   4K / ULTRA-WIDE
+========================================================= */
+
+@media (min-width: 2200px) {
+
+    :root {
+        --content-width: 1250px;
+    }
+
+    body {
+        font-size: 17px;
+    }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+    }
+}
+
+/* =========================================================
+   DARK MODE SAFETY
+========================================================= */
+
+@media (prefers-color-scheme: dark) {
+
+    body {
+        color-scheme: dark;
+    }
 }
