@@ -11,8 +11,13 @@
     >
 
     <title>
-        Random Conversations | EXCUSE-AS-A-SERVICE
+        Conversations | EXCUSE-AS-A-SERVICE
     </title>
+
+    <meta
+        name="description"
+        content="Random excuse conversations."
+    >
 
     <link
         rel="stylesheet"
@@ -25,156 +30,254 @@
 <body>
 
 
-<header class="topbar">
+<header class="site-header">
 
-    <a
-        href="index.html"
-        class="logo"
-    >
-        ☠️ EXCUSE-AS-A-SERVICE
-    </a>
-
-
-    <nav>
-
-        <a href="index.html">
-            Ask
-        </a>
+    <div class="shell header-inner">
 
         <a
-            href="conversations.html"
-            class="active"
+            href="index.html"
+            class="brand"
         >
-            Conversations
+
+            <span class="brand-mark">
+                ☠️
+            </span>
+
+            <span>
+                EXCUSE-AS-A-SERVICE
+            </span>
+
         </a>
 
-    </nav>
+
+        <nav class="nav">
+
+            <a
+                href="index.html"
+                class="nav-link"
+            >
+                ASK
+            </a>
+
+            <a
+                href="conversations.html"
+                class="nav-link active"
+            >
+                CONVERSATIONS
+            </a>
+
+        </nav>
+
+    </div>
 
 </header>
 
 
+<main class="shell">
 
-<main class="container">
 
+    <!-- HERO -->
 
-    <section class="hero">
+    <section class="hero compact">
 
-        <div class="skull">
+        <div class="hero-mark">
             💬
         </div>
 
+        <div class="eyebrow">
+            THE ARCHIVE
+        </div>
+
         <h1>
-            RANDOM CONVERSATIONS
+            RANDOM
+            <br>
+            CONVERSATIONS.
         </h1>
 
         <p>
-            Generate completely unnecessary
-            conversations between completely
-            unnecessary people.
+            Pre-generated nonsense between people
+            who probably should have just texted less.
         </p>
 
     </section>
 
 
+    <!-- RANDOMIZER -->
 
-    <section class="generator-controls">
+    <section class="generator-panel archive-panel">
 
-        <div class="control-group">
+        <div class="panel-top">
 
-            <label for="conversationCount">
-                NUMBER OF CONVERSATIONS
-            </label>
+            <div>
 
-            <select
-                id="conversationCount"
-            >
+                <div class="eyebrow">
+                    RANDOMIZER
+                </div>
 
-                <option value="1">
-                    1 Conversation
-                </option>
+                <h2>
+                    How many chats?
+                </h2>
 
-                <option value="3">
-                    3 Conversations
-                </option>
+            </div>
 
-                <option
-                    value="5"
-                    selected
-                >
-                    5 Conversations
-                </option>
 
-                <option value="10">
-                    10 Conversations
-                </option>
+            <span class="status-pill">
 
-                <option value="20">
-                    20 Conversations
-                </option>
+                <i></i>
 
-                <option value="50">
-                    50 Conversations
-                </option>
+                LIVE RANDOM
 
-            </select>
+            </span>
 
         </div>
 
 
-        <button
-            id="generateConversations"
-            class="primary-button"
-            type="button"
+        <div class="archive-controls">
+
+
+            <div class="count-control">
+
+                <div>
+
+                    <div class="field-label">
+                        CONVERSATIONS
+                    </div>
+
+                    <strong id="countDisplay">
+                        5
+                    </strong>
+
+                    <span>
+                        generated chats
+                    </span>
+
+                </div>
+
+
+                <div class="stepper">
+
+                    <button
+                        id="countMinus"
+                        type="button"
+                        aria-label="Decrease conversations"
+                    >
+                        −
+                    </button>
+
+                    <span id="countValue">
+                        5
+                    </span>
+
+                    <button
+                        id="countPlus"
+                        type="button"
+                        aria-label="Increase conversations"
+                    >
+                        +
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <button
+                id="generateConversations"
+                class="generate-button"
+                type="button"
+            >
+
+                <span>☠️</span>
+
+                GENERATE
+
+                <span>→</span>
+
+            </button>
+
+        </div>
+
+
+        <select
+            id="conversationCount"
+            class="hidden-control"
+            aria-hidden="true"
         >
-            ☠️ GENERATE CONVERSATIONS
-        </button>
+
+            <option value="1">1</option>
+            <option value="3">3</option>
+            <option value="5" selected>5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+
+        </select>
 
     </section>
 
 
+    <!-- RESULTS -->
 
-    <section class="results">
+    <section class="results-section">
 
-        <div
-            class="section-heading"
-            id="resultHeading"
-        >
-            RANDOM CONVERSATIONS
+        <div class="results-head">
+
+            <div>
+
+                <div class="eyebrow">
+                    OUTPUT
+                </div>
+
+                <h2 id="resultHeading">
+                    RANDOM CONVERSATIONS
+                </h2>
+
+            </div>
+
+
+            <span
+                class="result-count"
+                id="resultCount"
+            >
+                0
+            </span>
+
         </div>
 
 
         <div
             id="conversationContainer"
+            class="results-container"
         ></div>
 
 
         <button
             id="generateMore"
-            class="share-all"
+            class="secondary-button"
             type="button"
         >
-            🔄 GENERATE MORE
+            ↻ GENERATE MORE
         </button>
 
     </section>
 
-
 </main>
 
 
+<footer class="site-footer">
 
-<footer>
-
-    NO ACCOUNTS · NO DATABASE · NO TRACKING
+    <div class="shell">
+        EXCUSE-AS-A-SERVICE · NO ACCOUNTS · NO TRACKING · NO DATABASE
+    </div>
 
 </footer>
 
 
-
 <script src="data/content.js"></script>
 
-<script src="conversations.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
+<script src="conversations.js"></script>
 
 </body>
 
